@@ -176,10 +176,10 @@
     "superSplatId": "8d5c3046",
     "title": "Perseverance Rover",
     "author": "tmate",
-    "bundled": false,
+    "bundled": true,
     "fileName": "perseverance.sog",
-    "byteSize": 11539532,
-    "sha256": "df0d25eab420c73e24f9de4f44ca446fcd4df7c672180a13180192cc2738f768",
+    "byteSize": 11533197,
+    "sha256": "0beaaa71403bbbec3ffa8c3f7049f22d5c2741dc40a9e2ceecb6453d24881da3",
     "splatCount": 800000,
     "camera": {
       "position": [
@@ -204,7 +204,7 @@
       "count": 6008726,
       "streamedLevel": null
     },
-    "retrieved": "2026-09-28"
+    "retrieved": "2026-09-30"
   },
   {
     "id": "iss-sunset",

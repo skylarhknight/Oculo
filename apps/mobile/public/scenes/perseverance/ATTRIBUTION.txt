@@ -8,14 +8,14 @@ License URL: https://creativecommons.org/licenses/by/4.0/
 Credit: Perseverance Rover — tmate · CC BY 4.0
 
 The creator's scene page offered this asset for download under CC BY 4.0 when
-retrieved on 2026-09-28. This attribution applies to the scene asset; Oculo's
+retrieved on 2026-09-30. This attribution applies to the scene asset; Oculo's
 application code is licensed separately. Retain this credit, the source and license
 links, and this indication of changes when redistributing the scene or images
 derived from it.
 
 File: perseverance.sog
-Size: 11,539,532 bytes
-SHA-256: df0d25eab420c73e24f9de4f44ca446fcd4df7c672180a13180192cc2738f768
+Size: 11,533,197 bytes
+SHA-256: 0beaaa71403bbbec3ffa8c3f7049f22d5c2741dc40a9e2ceecb6453d24881da3
 Format: SOG; 800,000 Gaussian splats
 
 Changes: Reduced from 6,008,726 to 800,000 Gaussian splats, spherical harmonics reduced to degree 1, NaN splats removed, and re-encoded as SOG for mobile.

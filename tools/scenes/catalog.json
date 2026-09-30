@@ -52,7 +52,7 @@
       "superSplatId": "8d5c3046",
       "title": "Perseverance Rover",
       "author": "tmate",
-      "bundled": false,
+      "bundled": true,
       "splatBudget": 800000
     },
     {
