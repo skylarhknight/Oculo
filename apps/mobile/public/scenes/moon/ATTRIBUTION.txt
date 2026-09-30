@@ -8,14 +8,14 @@ License URL: https://creativecommons.org/licenses/by/4.0/
 Credit: The Moon — nicolasdiolez · CC BY 4.0
 
 The creator's scene page offered this asset for download under CC BY 4.0 when
-retrieved on 2026-09-28. This attribution applies to the scene asset; Oculo's
+retrieved on 2026-09-30. This attribution applies to the scene asset; Oculo's
 application code is licensed separately. Retain this credit, the source and license
 links, and this indication of changes when redistributing the scene or images
 derived from it.
 
 File: moon.sog
-Size: 11,256,251 bytes
-SHA-256: ce4fc620246eb3a038d3ab080273f87528ce1a09f03c62a2eb3ec7a30221c444
+Size: 11,255,180 bytes
+SHA-256: 5f3b29e725686c99a0b1ed9580bed190a2dd9fb354f42ee9a64e91a20803822a
 Format: SOG; 800,000 Gaussian splats
 
 Changes: Reduced from 4,929,011 to 800,000 Gaussian splats, spherical harmonics reduced to degree 1, NaN splats removed, and re-encoded as SOG for mobile.

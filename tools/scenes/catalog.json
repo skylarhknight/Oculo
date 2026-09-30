@@ -36,7 +36,7 @@
       "superSplatId": "2ac8f423",
       "title": "The Moon",
       "author": "nicolasdiolez",
-      "bundled": false,
+      "bundled": true,
       "splatBudget": 800000
     },
     {
@@ -68,7 +68,7 @@
       "superSplatId": "cc026f6a",
       "title": "International Space Station",
       "author": "tmate",
-      "bundled": false,
+      "bundled": true,
       "splatBudget": 800000
     },
     {
