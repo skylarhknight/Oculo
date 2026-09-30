@@ -1,0 +1,76 @@
+/*
+ * The one orchestrated screen transition, modeled on UINavigationController: the
+ * pushed screen slides the full width in from the right on a spring, casting an
+ * edge shadow, while the screen below parallaxes a third of the way and dims.
+ * Pops reverse it. Swipe-back drives the same properties live from the finger.
+ */
+.nav-stack {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: var(--color-bg);
+}
+
+.nav-screen {
+  --swipe-x: 0px;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--color-bg);
+  transform: translate3d(var(--swipe-x), 0, 0);
+  will-change: transform;
+}
+
+.nav-screen[data-phase="covered"] {
+  visibility: hidden;
+}
+.nav-screen[data-phase="covered"][data-revealing="true"] {
+  visibility: visible;
+  transform: translate3d(calc(var(--push-parallax) * (1 - var(--swipe-progress, 0))), 0, 0);
+  opacity: calc(var(--nav-dim-opacity) + (1 - var(--nav-dim-opacity)) * var(--swipe-progress, 0));
+}
+
+.nav-screen[data-phase="enter-push"] {
+  z-index: var(--z-screen-transition);
+  animation: nav-enter-push var(--dur-slow) var(--spring-smooth) both;
+  box-shadow: var(--shadow-float);
+}
+.nav-screen[data-phase="cover"] {
+  animation: nav-cover var(--dur-slow) var(--spring-smooth) both;
+}
+.nav-screen[data-phase="exit-pop"] {
+  z-index: var(--z-screen-transition);
+  animation: nav-exit-pop var(--dur-base) var(--ease-emphasized) both;
+  box-shadow: var(--shadow-float);
+}
+.nav-screen[data-phase="enter-pop"] {
+  animation: nav-enter-pop var(--dur-base) var(--ease-emphasized) both;
+}
+.nav-screen[data-swiping="true"] {
+  z-index: var(--z-screen-transition);
+  animation: none;
+  box-shadow: var(--shadow-float);
+}
+
+@keyframes nav-enter-push {
+  from {
+    transform: translate3d(var(--push-offset), 0, 0);
+  }
+}
+@keyframes nav-cover {
+  to {
+    transform: translate3d(var(--push-parallax), 0, 0);
+    opacity: var(--nav-dim-opacity);
+  }
+}
+@keyframes nav-exit-pop {
+  to {
+    transform: translate3d(var(--push-offset), 0, 0);
+  }
+}
+@keyframes nav-enter-pop {
+  from {
+    transform: translate3d(var(--push-parallax), 0, 0);
+    opacity: var(--nav-dim-opacity);
+  }
+}

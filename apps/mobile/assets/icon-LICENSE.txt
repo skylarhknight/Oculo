@@ -1,0 +1,2 @@
+The Oculo app icon (apps/mobile/assets/icon.svg) was generated with ChatGPT (OpenAI).
+Oculo's interface icons are separate; see public/licenses/lucide-icons.txt.

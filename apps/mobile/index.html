@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f2f2f7" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000000" />
+    <meta name="description" content="Oculo — cinematic camera direction for spatial scenes." />
+    <title>Oculo</title>
+    <script>
+      // First paint uses the last Appearance setting; theme/appearance.ts takes over once
+      // preferences load. Keep the storage key in sync with APPEARANCE_STORAGE_KEY.
+      (function () {
+        var preference = "system";
+        try {
+          preference = localStorage.getItem("oculo.appearance") || "system";
+        } catch (error) {}
+        var light =
+          preference === "light" ||
+          (preference === "system" &&
+            window.matchMedia &&
+            window.matchMedia("(prefers-color-scheme: light)").matches);
+        document.documentElement.dataset.theme = light ? "light" : "dark";
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

@@ -1,0 +1,24 @@
+Tugboats, Trieste
+Creator: tosolini
+Creator profile: https://superspl.at/user/tosolini
+Source: https://superspl.at/scene/45877bc9
+License: Creative Commons Attribution 4.0 International (CC BY 4.0)
+License URL: https://creativecommons.org/licenses/by/4.0/
+
+Credit: Tugboats, Trieste — tosolini · CC BY 4.0
+
+The creator's scene page offered this asset for download under CC BY 4.0 when
+retrieved on 2026-09-28. This attribution applies to the scene asset; Oculo's
+application code is licensed separately. Retain this credit, the source and license
+links, and this indication of changes when redistributing the scene or images
+derived from it.
+
+File: trieste-tugboats.sog
+Size: 9,851,767 bytes
+SHA-256: d894069df0a5582a745262a5fef6470bf716f7ef5e1d59ee755da406e960e078
+Format: SOG; 800,000 Gaussian splats
+
+Changes: Reduced from 14,898,311 to 800,000 Gaussian splats, spherical harmonics reduced to degree 1, NaN splats removed, and re-encoded as SOG for mobile.
+
+Start camera: the creator's published SuperSplat viewer camera
+(position [4.367990970611572,-0.6104521155357361,4.794667720794678], target [-3.331991620020257,0.16780781270441625,-11.121878544263632]).

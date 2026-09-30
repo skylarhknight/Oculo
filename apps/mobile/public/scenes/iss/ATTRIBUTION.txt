@@ -1,0 +1,24 @@
+International Space Station
+Creator: tmate
+Creator profile: https://superspl.at/user/tmate
+Source: https://superspl.at/scene/cc026f6a
+License: Creative Commons Attribution 4.0 International (CC BY 4.0)
+License URL: https://creativecommons.org/licenses/by/4.0/
+
+Credit: International Space Station — tmate · CC BY 4.0
+
+The creator's scene page offered this asset for download under CC BY 4.0 when
+retrieved on 2026-09-28. This attribution applies to the scene asset; Oculo's
+application code is licensed separately. Retain this credit, the source and license
+links, and this indication of changes when redistributing the scene or images
+derived from it.
+
+File: iss.sog
+Size: 11,788,834 bytes
+SHA-256: 7628c729ced60d8f71b49d9b89b75c72b2bc3530675ffc385869fe19d9b76998
+Format: SOG; 800,000 Gaussian splats
+
+Changes: Reduced from 9,999,999 to 800,000 Gaussian splats, spherical harmonics reduced to degree 1, NaN splats removed, and re-encoded as SOG for mobile.
+
+Start camera: the creator's published SuperSplat viewer camera
+(position [-1.0384409427642822,46.72137451171875,-61.590667724609375], target [-1.0385685281633152,45.52948976476853,-59.984614348077756]).

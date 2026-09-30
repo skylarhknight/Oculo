@@ -1,0 +1,408 @@
+/* ── Scene gallery ───────────────────────────────────────
+ * A live preview over the top of the screen (always dark, like the workspace) and a
+ * two-column grid of scene cards beneath it. The picked card lifts, gains the accent
+ * ring, and shows its "Select scene" button.
+ */
+.scene-gallery-screen {
+  background: var(--color-bg);
+}
+/* Frosted dark glass over the live preview, like the workspace's top bar. */
+.scene-gallery__bar {
+  position: absolute;
+  inset: 0 0 auto;
+  color: var(--color-on-scene);
+  background: var(--material-ultrathin);
+  -webkit-backdrop-filter: var(--material-blur);
+  backdrop-filter: var(--material-blur);
+  box-shadow: 0 var(--border-hairline) 0 var(--material-edge);
+}
+.scene-gallery__bar .icon-btn {
+  color: var(--color-on-scene);
+}
+.scene-gallery__bar .app-bar__title {
+  opacity: 1;
+  transform: none;
+}
+.scene-gallery__select {
+  min-width: calc(var(--hit-min) + var(--space-5));
+}
+
+.scene-stage-preview {
+  position: relative;
+  flex: none;
+  height: max(var(--scene-stage-h), var(--scene-stage-min-h));
+  overflow: hidden;
+  color: var(--color-on-scene);
+  background: var(--color-scene);
+  border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+}
+.scene-preview,
+.scene-preview__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.scene-preview__canvas {
+  display: block;
+  touch-action: none;
+}
+.scene-preview__rotate {
+  position: absolute;
+  right: calc(var(--space-3) + var(--safe-right));
+  bottom: calc(var(--space-3) + var(--hit-min) + var(--space-2));
+  display: flex;
+  gap: var(--space-2);
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease-standard);
+}
+.scene-stage-preview[data-status="ready"] .scene-preview__rotate {
+  opacity: 1;
+}
+.scene-preview__turn {
+  display: grid;
+  place-items: center;
+  width: var(--hit-min);
+  height: var(--hit-min);
+  color: var(--color-on-scene);
+  background: var(--color-surface-overlay);
+  border-radius: var(--radius-pill);
+  -webkit-backdrop-filter: var(--material-blur);
+  backdrop-filter: var(--material-blur);
+}
+
+/* The card's thumbnail stands in until the live preview has a frame. */
+.scene-stage-preview__poster {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition:
+    opacity var(--dur-slow) var(--ease-standard),
+    filter var(--dur-slow) var(--ease-standard),
+    transform var(--dur-slow) var(--spring-smooth);
+}
+.scene-stage-preview__poster[data-hidden="true"] {
+  opacity: 0;
+  transform: scale(1.04);
+  pointer-events: none;
+}
+.scene-stage-preview__poster[data-blur="true"] {
+  filter: blur(var(--blur-overlay)) saturate(var(--material-saturate));
+  transform: scale(1.1);
+}
+
+.scene-stage-preview__status {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  max-width: calc(100% - var(--space-8));
+  padding: var(--space-4) var(--space-5);
+  font-size: var(--text-sm);
+  text-align: center;
+  background: var(--color-surface-overlay);
+  border-radius: var(--radius-xl);
+  -webkit-backdrop-filter: var(--material-blur);
+  backdrop-filter: var(--material-blur);
+  transform: translate(-50%, -50%);
+  animation: pop-in var(--dur-base) var(--spring-smooth) both;
+}
+.scene-stage-preview__status--quiet {
+  flex-direction: row;
+  padding: var(--space-2) var(--space-4);
+  color: var(--color-on-scene-secondary);
+  border-radius: var(--radius-pill);
+}
+
+.progress-ring {
+  width: var(--progress-ring);
+  height: var(--progress-ring);
+}
+.progress-ring svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+.progress-ring circle {
+  fill: none;
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+.progress-ring__track {
+  stroke: var(--color-fill-2);
+}
+.progress-ring__value {
+  stroke: var(--color-accent);
+  stroke-dasharray: 1;
+  stroke-dashoffset: calc(1 - var(--progress, 0));
+  transition: stroke-dashoffset var(--dur-fast) linear;
+}
+
+.scene-stage-preview__caption {
+  position: absolute;
+  left: calc(var(--space-4) + var(--safe-left));
+  right: calc(var(--space-3) + var(--safe-right));
+  bottom: var(--space-3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  text-shadow: var(--shadow-text);
+  pointer-events: none;
+}
+.scene-stage-preview__caption > span {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.scene-stage-preview__caption strong {
+  overflow: hidden;
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.scene-stage-preview__caption small {
+  color: var(--color-on-scene-secondary);
+  font-size: var(--text-sm);
+}
+.scene-stage-preview__info {
+  display: grid;
+  place-items: center;
+  width: var(--hit-min);
+  height: var(--hit-min);
+  color: var(--color-on-scene);
+  background: var(--color-surface-overlay);
+  border-radius: var(--radius-pill);
+  -webkit-backdrop-filter: var(--material-blur);
+  backdrop-filter: var(--material-blur);
+  pointer-events: auto;
+}
+
+/* Nothing picked yet: a fanned stack of thumbnails invites a tap. */
+.scene-stage-preview__empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-5);
+  padding-top: calc(var(--safe-top) + var(--app-bar-h));
+  color: var(--color-on-scene-secondary);
+  font-size: var(--text-md);
+}
+.scene-stage-preview__empty p {
+  margin: 0;
+}
+.scene-stage-preview__posters {
+  position: relative;
+  width: calc(var(--card-min-w) + var(--space-6));
+  aspect-ratio: var(--card-thumb-ratio);
+}
+.scene-stage-preview__posters img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-float);
+  transform: rotate(calc((var(--i) - 1.5) * 6deg))
+    translate3d(calc((var(--i) - 1.5) * var(--space-5)), 0, 0);
+  animation: stagger-rise var(--dur-slow) var(--spring-bouncy) both;
+  animation-delay: calc(var(--i) * var(--stagger-step));
+}
+
+.scene-gallery__scroll {
+  padding: var(--space-4) calc(var(--space-4) + var(--safe-right))
+    calc(var(--space-6) + var(--safe-bottom)) calc(var(--space-4) + var(--safe-left));
+}
+
+.scene-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--card-min-w), 1fr));
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.scene-card {
+  position: relative;
+  animation: stagger-rise var(--dur-slow) var(--spring-smooth) both;
+  animation-delay: calc(min(var(--i, 0), var(--stagger-max)) * var(--stagger-step));
+}
+.scene-card__button {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0;
+  overflow: hidden;
+  color: var(--color-text);
+  text-align: left;
+  background: var(--color-cell);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  transition:
+    transform var(--dur-base) var(--spring-bouncy),
+    box-shadow var(--dur-base) var(--ease-standard);
+}
+.scene-card__button:active {
+  transform: scale(0.97);
+}
+.scene-card[data-selected="true"] .scene-card__button {
+  box-shadow:
+    0 0 0 var(--border-focus) var(--color-accent),
+    var(--shadow-float);
+  transform: translate3d(0, calc(var(--space-1) * -1), 0);
+}
+.scene-card[data-unavailable="true"] .scene-card__art img {
+  opacity: 0.5;
+  filter: grayscale(1);
+}
+.scene-card__art {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: var(--card-thumb-ratio);
+  color: var(--color-accent);
+  background: var(--color-fill-3);
+}
+.scene-card__art img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.scene-card__badge {
+  position: absolute;
+  left: var(--space-2);
+  bottom: var(--space-2);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-half) var(--space-2);
+  color: var(--color-on-scene);
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-semibold);
+  background: var(--palette-glass-thin);
+  border-radius: var(--radius-pill);
+  -webkit-backdrop-filter: var(--material-blur);
+  backdrop-filter: var(--material-blur);
+}
+.scene-card__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-half);
+  padding: var(--space-2) var(--space-3) var(--space-3);
+}
+.scene-card__text strong {
+  overflow: hidden;
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.scene-card__text small {
+  overflow: hidden;
+  color: var(--color-text-secondary);
+  font-size: var(--text-xs);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.scene-card--import .scene-card__art {
+  background: var(--color-accent-soft);
+}
+
+/* "Select scene" rises over the picked card's thumbnail. */
+.scene-card__select-layer {
+  position: absolute;
+  inset: 0 0 auto;
+  display: grid;
+  place-items: center;
+  aspect-ratio: var(--card-thumb-ratio);
+  background: var(--color-scrim);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  transform: translate3d(0, calc(var(--space-1) * -1), 0);
+  pointer-events: none;
+  animation: select-scrim var(--dur-base) var(--ease-standard) both;
+}
+.scene-card__select {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--pill-action-h);
+  padding: 0 var(--space-4);
+  color: var(--color-text-on-accent);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  white-space: nowrap;
+  background: var(--color-accent);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-fab);
+  pointer-events: auto;
+  animation: select-rise var(--dur-base) var(--spring-bouncy) both;
+}
+.scene-card__select:disabled {
+  color: var(--color-on-scene);
+  background: var(--palette-glass-thin);
+  -webkit-backdrop-filter: var(--material-blur);
+  backdrop-filter: var(--material-blur);
+}
+@keyframes select-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, var(--space-3), 0) scale(0.8);
+  }
+}
+@keyframes select-scrim {
+  from {
+    opacity: 0;
+  }
+}
+
+.scene-gallery__note {
+  margin: var(--space-5) var(--space-1) 0;
+  color: var(--color-text-tertiary);
+  font-size: var(--text-xs);
+  line-height: var(--leading-normal);
+}
+
+.scene-credits {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.scene-credits li {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-half);
+  font-size: var(--text-sm);
+}
+.scene-credits strong {
+  font-size: var(--text-md);
+}
+.scene-credits a {
+  color: var(--color-accent);
+}
+.scene-credits small {
+  color: var(--color-text-secondary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene-card,
+  .scene-card__select,
+  .scene-card__select-layer,
+  .scene-stage-preview__posters img {
+    animation: none;
+  }
+}

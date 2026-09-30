@@ -1,0 +1,347 @@
+/*
+ * Dialog content for accounts, purchase, and legal notices. These render inside
+ * the shared bottom sheet (ui.css). Token-only.
+ */
+
+/* ── Generic dialog content ────────────────────────── */
+.modal-body {
+  padding: var(--space-2) var(--gutter) var(--space-6);
+}
+.modal-actions {
+  margin-top: var(--space-4);
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+.modal-actions > * {
+  flex: 1;
+}
+.modal.expanded-graph {
+  max-width: var(--content-max-w);
+}
+.expanded-graph header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+.expanded-graph .speed-curve-graph {
+  height: clamp(var(--curve-graph-h), 40vh, var(--curve-graph-expanded-h));
+}
+.settings-meta {
+  margin-top: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--color-cell);
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+}
+.settings-meta code {
+  color: var(--color-text);
+  font-family: var(--font-mono);
+}
+
+/* ── Account ───────────────────────────────────────── */
+.account-sheet .modal-body {
+  display: grid;
+  gap: var(--space-2);
+}
+.account-note {
+  margin: 0 0 var(--space-2);
+  color: var(--color-text-secondary);
+  font-size: var(--text-md);
+  line-height: var(--leading-normal);
+}
+.account-note.danger-note {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  color: var(--color-danger);
+}
+.auth-providers {
+  display: grid;
+  gap: var(--space-2);
+}
+.provider-button {
+  background: var(--color-cell);
+  color: var(--color-text);
+}
+.auth-divider {
+  margin: var(--space-4) 0 var(--space-3);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+}
+.auth-divider::before,
+.auth-divider::after {
+  content: "";
+  flex: 1;
+  height: var(--border-hairline);
+  background: var(--color-separator);
+}
+.auth-error,
+.auth-notice {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-sm);
+  line-height: var(--leading-snug);
+  animation: alert-in var(--dur-base) var(--spring-smooth) both;
+}
+.auth-error {
+  color: var(--color-danger);
+}
+.auth-notice {
+  color: var(--color-success);
+}
+.auth-links {
+  margin-top: var(--space-3);
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+.auth-links button,
+.restore-button,
+.license-link,
+.manage-purchase {
+  min-height: var(--hit-min);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-accent);
+  font-size: var(--text-md);
+  cursor: pointer;
+}
+.account-identity {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-cell);
+}
+.account-avatar {
+  width: var(--space-9);
+  height: var(--space-9);
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-pill);
+  background: var(--color-fill-3);
+  color: var(--color-text-secondary);
+}
+.account-identity strong {
+  display: block;
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+}
+.account-identity small {
+  display: block;
+  margin-top: var(--space-half);
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+}
+.account-identity em {
+  font-style: normal;
+  font-size: var(--text-xs);
+}
+.account-identity .verified {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--color-success);
+}
+.account-identity .unverified {
+  color: var(--color-warning);
+}
+.sync-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-cell);
+  color: var(--color-text-secondary);
+  font-size: var(--text-md);
+}
+.delete-confirm {
+  margin-top: var(--space-3);
+  padding-top: var(--space-4);
+  box-shadow: inset 0 var(--border-hairline) 0 var(--color-separator);
+}
+.icon-button.account-active {
+  color: var(--color-accent);
+}
+
+/* ── Paywall ───────────────────────────────────────── */
+.paywall-backdrop {
+  background: var(--color-scrim);
+}
+.modal-backdrop > .paywall {
+  padding: var(--space-8) var(--space-6) calc(var(--space-6) + var(--safe-bottom));
+  text-align: center;
+}
+.paywall-close {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  width: var(--hit-min);
+  height: var(--hit-min);
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+.paywall-close::before {
+  content: "";
+  position: absolute;
+  inset: calc((var(--hit-min) - var(--space-7)) / 2);
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--color-fill-3);
+}
+.paywall-symbol {
+  width: var(--space-10);
+  height: var(--space-10);
+  margin: 0 auto var(--space-4);
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-xl);
+  background: var(--gradient-hero);
+  color: var(--color-text-on-accent);
+  box-shadow: var(--shadow-float);
+  animation: pop-in var(--dur-sheet) var(--spring-bouncy) both;
+}
+/* Product-page headline: display type, the promise in the hero spectrum. */
+.paywall h2 {
+  margin: var(--space-2) 0 var(--space-3);
+  font-family: var(--font-display);
+  font-size: var(--text-display-s);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-hero);
+  line-height: var(--leading-display);
+  animation: paywall-rise var(--dur-reveal) var(--ease-reveal) both;
+  animation-delay: var(--dur-fast);
+}
+.paywall h2 em {
+  font-style: normal;
+  background: var(--gradient-hero);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.paywall-copy,
+.paywall .kicker {
+  animation: paywall-rise var(--dur-reveal) var(--ease-reveal) both;
+  animation-delay: var(--dur-base);
+}
+@keyframes paywall-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, var(--reveal-distance), 0);
+  }
+}
+.paywall-copy {
+  color: var(--color-text-secondary);
+  font-size: var(--text-md);
+  line-height: var(--leading-normal);
+}
+.paywall ul {
+  margin: var(--space-5) 0;
+  padding: var(--space-1) 0;
+  display: grid;
+  border-radius: var(--radius-md);
+  background: var(--color-cell);
+  list-style: none;
+  text-align: left;
+}
+.paywall li {
+  position: relative;
+  animation: paywall-rise var(--dur-reveal) var(--ease-reveal) both;
+  animation-delay: calc(var(--dur-slow) + var(--i, 0) * var(--stagger-step) * 3);
+  min-height: var(--hit-min);
+  padding: var(--space-2) var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--text-md);
+}
+.paywall li + li::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: calc(var(--space-4) + var(--icon-md) + var(--space-3));
+  height: var(--border-hairline);
+  background: var(--color-separator);
+  transform: scaleY(0.5);
+}
+.paywall li svg {
+  flex: none;
+  color: var(--color-accent);
+}
+.purchase-button {
+  width: 100%;
+  margin: 0;
+}
+.purchase-note,
+.purchase-error {
+  margin: var(--space-3) 0;
+  display: block;
+  text-align: center;
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+}
+.purchase-error {
+  color: var(--color-danger);
+}
+.purchase-price {
+  margin: var(--space-5) 0 var(--space-2);
+  font-size: var(--text-xl);
+  font-weight: var(--weight-semibold);
+  font-variant-numeric: tabular-nums;
+}
+.purchase-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-4);
+}
+
+/* ── Help and legal ────────────────────────────────── */
+.release-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0 var(--space-5);
+  margin-top: var(--space-3);
+}
+.release-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--hit-min);
+  color: var(--color-accent);
+  font-size: var(--text-md);
+  text-decoration: none;
+}
+.license-text {
+  margin: 0;
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-cell);
+  color: var(--color-text-secondary);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font: var(--text-xs) / var(--leading-normal) var(--font-mono);
+  user-select: text;
+  -webkit-user-select: text;
+}

@@ -1,0 +1,3 @@
+The map-view cinematographer model (models/cinematographer.glb) and its tray renders
+(models/cinematographer-token@2x.png, @3x.png) are original Oculo artwork, generated
+from tools/blender/cinematographer.py with Blender. They include no third-party assets.

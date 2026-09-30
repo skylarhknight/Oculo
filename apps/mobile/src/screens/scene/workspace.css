@@ -1,0 +1,2218 @@
+/*
+ * Scene workspace: a full-bleed viewport on top, and every tool in a stage panel
+ * anchored to the bottom (thumb zone). Token-only.
+ */
+.workspace-screen {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+}
+
+/* ── Viewport ───────────────────────────────────────── */
+.workspace-viewport {
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--color-scene);
+}
+/*
+ * --dock-bottom is the top of the bottom controls: the capture bar (plus Update
+ * keyframe when shown), or with the thumb sticks the side buttons riding above them.
+ * The playback bar sits on it, and the framed shot stays clear of both.
+ */
+.workspace-screen {
+  --dock-bottom: calc(var(--viewport-bottom-edge) + var(--capture-h) + var(--space-2));
+}
+.workspace-screen:has(.capture-bar__update) {
+  --dock-bottom: calc(
+    var(--viewport-bottom-edge) + var(--capture-h) + var(--hit-min) + var(--space-2) * 2
+  );
+}
+.workspace-screen[data-sticks="true"] {
+  --dock-bottom: calc(
+    var(--viewport-bottom-edge) + var(--stick-size) + var(--space-3) + var(--capture-side) +
+      var(--space-2)
+  );
+}
+.workspace-viewport .scene-stage {
+  top: var(--viewport-top-reserve);
+  bottom: var(--dock-bottom);
+  transition:
+    bottom var(--dur-slow) var(--spring-smooth),
+    transform var(--dur-slow) var(--spring-smooth);
+}
+.workspace-screen:has(.scene-progress-dock) .workspace-viewport .scene-stage {
+  bottom: calc(var(--dock-bottom) + var(--scene-progress-h) + var(--space-2));
+}
+.workspace-viewport .scene-status {
+  z-index: var(--z-raised);
+}
+.workspace-topbar {
+  position: absolute;
+  z-index: var(--z-bar);
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: calc(var(--safe-top) + var(--space-2)) calc(var(--space-3) + var(--safe-right)) 0
+    calc(var(--space-3) + var(--safe-left));
+  pointer-events: none;
+}
+.workspace-topbar > * {
+  pointer-events: auto;
+}
+/* Title capsule: the scene or shot name over its save state, in glass. */
+.workspace-title {
+  flex: 1;
+  min-width: 0;
+  min-height: var(--hit-min);
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  padding: var(--space-1) var(--space-4);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--material-ultrathin);
+  -webkit-backdrop-filter: var(--material-blur);
+  backdrop-filter: var(--material-blur);
+  box-shadow: inset 0 0 0 var(--border-hairline) var(--material-edge);
+  color: var(--color-on-scene);
+  text-align: center;
+  cursor: pointer;
+  transition: transform var(--dur-base) var(--spring-snappy);
+}
+.workspace-title:active {
+  transform: scale(var(--press-scale));
+}
+.workspace-title strong {
+  max-width: 100%;
+  overflow: hidden;
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.workspace-title small {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--color-on-scene-secondary);
+  font-size: var(--text-2xs);
+  font-variant-numeric: tabular-nums;
+  animation: status-swap var(--dur-base) var(--ease-standard);
+}
+@keyframes status-swap {
+  from {
+    opacity: 0;
+  }
+}
+.workspace-topbar__tools {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+.workspace-map-btn svg {
+  color: var(--color-highlight);
+}
+.workspace-title:disabled {
+  cursor: default;
+}
+.workspace-title:disabled:active {
+  transform: none;
+}
+.workspace-title strong {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+.workspace-title strong svg {
+  flex: none;
+  color: var(--color-on-scene-secondary);
+}
+/* A labelled glass capsule for tools that deserve words (Map, Update keyframe). */
+.capsule-btn {
+  min-height: var(--hit-min);
+  padding: 0 var(--space-4);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  border: 0;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    transform var(--dur-base) var(--spring-snappy),
+    opacity var(--dur-fast) var(--ease-standard);
+}
+.capsule-btn--overlay {
+  background: var(--material-regular);
+  -webkit-backdrop-filter: var(--material-blur);
+  backdrop-filter: var(--material-blur);
+  box-shadow: inset 0 0 0 var(--border-hairline) var(--material-edge);
+  color: var(--color-on-scene);
+}
+.capsule-btn:active:not(:disabled) {
+  transform: scale(var(--press-scale));
+  transition-duration: var(--dur-instant);
+}
+.capsule-btn:disabled {
+  opacity: var(--disabled-opacity);
+  cursor: default;
+}
+/* Messages drop in under the top bar, clear of the shutter and the playback bar. */
+.workspace-toast {
+  position: absolute;
+  z-index: var(--z-toast);
+  left: var(--gutter);
+  right: var(--gutter);
+  top: calc(var(--viewport-top-reserve) + var(--space-2));
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  border-radius: var(--radius-lg);
+  background: var(--material-regular);
+  -webkit-backdrop-filter: var(--material-blur);
+  backdrop-filter: var(--material-blur);
+  box-shadow: var(--shadow-float);
+  color: var(--color-warning);
+  font-size: var(--text-md);
+  animation: toast-in var(--dur-slow) var(--spring-bouncy) both;
+}
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, calc(-1 * var(--space-4)), 0) scale(0.96);
+  }
+}
+/* A short confirmation pill that leaves on its own. */
+.workspace-toast--pill {
+  left: 50%;
+  right: auto;
+  translate: -50% 0;
+  width: max-content;
+  max-width: calc(100% - var(--gutter) * 2);
+  padding: var(--space-1) var(--space-1) var(--space-1) var(--space-4);
+  border-radius: var(--radius-pill);
+  color: var(--color-on-scene);
+  font-weight: var(--weight-semibold);
+  animation:
+    toast-in var(--dur-slow) var(--spring-bouncy) both,
+    toast-timeout var(--dur-hint) linear forwards;
+}
+@keyframes toast-timeout {
+  0%,
+  92% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+.workspace-toast--pill .btn--link {
+  color: var(--color-accent);
+}
+/* An instruction while a mode is armed, with its way out. */
+.workspace-banner {
+  position: absolute;
+  z-index: var(--z-toast);
+  left: 50%;
+  top: calc(var(--viewport-top-reserve) + var(--space-2));
+  translate: -50% 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-1) var(--space-1) var(--space-1) var(--space-4);
+  border-radius: var(--radius-pill);
+  background: var(--material-regular);
+  -webkit-backdrop-filter: var(--material-blur);
+  backdrop-filter: var(--material-blur);
+  box-shadow: var(--shadow-float);
+  color: var(--color-highlight);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  white-space: nowrap;
+  animation: toast-in var(--dur-slow) var(--spring-bouncy) both;
+}
+/* A tapped shot marker asks before switching shots. */
+.marker-callout {
+  position: absolute;
+  z-index: var(--z-toast);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-1) var(--space-1) var(--space-3);
+  translate: -50% calc(-100% - var(--space-3));
+  border-radius: var(--radius-pill);
+  background: var(--material-regular);
+  -webkit-backdrop-filter: var(--material-blur);
+  backdrop-filter: var(--material-blur);
+  box-shadow: var(--shadow-float);
+  color: var(--color-on-scene);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  white-space: nowrap;
+  transform-origin: 50% 100%;
+  animation:
+    callout-in var(--dur-slow) var(--spring-bouncy) both,
+    callout-timeout var(--callout-ms) linear forwards;
+}
+.marker-callout::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: calc(-1 * var(--space-1));
+  width: var(--space-2);
+  height: var(--space-2);
+  translate: -50% 0;
+  rotate: 45deg;
+  background: inherit;
+}
+@keyframes callout-in {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+@keyframes callout-timeout {
+  0%,
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+.workspace-toast span {
+  flex: 1;
+}
+.handheld-badge {
+  position: absolute;
+  z-index: var(--z-raised);
+  left: 50%;
+  bottom: var(--viewport-bottom-edge);
+  translate: -50% 0;
+}
+/* Handheld sits on the row under the top bar, opposite the lens readout. */
+.workspace-viewport .magic-window-controls {
+  top: calc(var(--safe-top) + var(--space-2) + var(--hit-min) + var(--space-2));
+  right: auto;
+  left: calc(var(--gutter) + var(--safe-left));
+  z-index: var(--z-raised);
+}
+
+/*
+ * The capture bar, like the Camera app: the last shot's image on the left (the
+ * library), the shutter in the middle, and a secondary action on the right. With the
+ * thumb sticks shown, the side buttons ride above the sticks and the shutter stays
+ * between them.
+ */
+.capture-bar {
+  position: absolute;
+  z-index: var(--z-raised);
+  left: calc(var(--gutter) + var(--safe-left));
+  right: calc(var(--gutter) + var(--safe-right));
+  bottom: var(--viewport-bottom-edge);
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2);
+  pointer-events: none;
+}
+.capture-bar > *,
+.capture-bar__row > * {
+  pointer-events: auto;
+}
+.capture-bar__row {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  pointer-events: none;
+}
+.capture-bar__update {
+  animation: pop-in var(--dur-slow) var(--spring-bouncy) both;
+}
+.capture-bar__library,
+.capture-bar__side {
+  position: relative;
+  width: var(--capture-side);
+  height: var(--capture-side);
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  cursor: pointer;
+  transition:
+    transform var(--dur-base) var(--spring-snappy),
+    translate var(--dur-slow) var(--spring-smooth),
+    opacity var(--dur-fast) var(--ease-standard);
+}
+.capture-bar__library {
+  justify-self: start;
+  border-radius: var(--radius-md);
+  background: var(--material-regular);
+  -webkit-backdrop-filter: var(--material-blur);
+  backdrop-filter: var(--material-blur);
+  box-shadow: 0 0 0 var(--border-focus) var(--color-on-scene);
+  color: var(--color-on-scene);
+}
+.capture-bar__library img {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  object-fit: cover;
+  animation: pop-in var(--dur-slow) var(--spring-bouncy) both;
+}
+.capture-bar__library i {
+  position: absolute;
+  top: calc(-1 * var(--space-2));
+  right: calc(-1 * var(--space-2));
+  min-width: var(--space-5);
+  height: var(--space-5);
+  padding: 0 var(--space-1);
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-pill);
+  background: var(--color-accent);
+  color: var(--color-text-on-accent);
+  font-size: var(--text-2xs);
+  font-style: normal;
+  font-weight: var(--weight-bold);
+  font-variant-numeric: tabular-nums;
+}
+.capture-bar__side {
+  justify-self: end;
+  border-radius: 50%;
+  background: var(--material-regular);
+  -webkit-backdrop-filter: var(--material-blur);
+  backdrop-filter: var(--material-blur);
+  box-shadow: inset 0 0 0 var(--border-hairline) var(--material-edge);
+  color: var(--color-on-scene);
+  animation: pop-in var(--dur-slow) var(--spring-bouncy) both;
+}
+.capture-bar__side--empty {
+  visibility: hidden;
+  animation: none;
+}
+.capture-bar__library:active:not(:disabled),
+.capture-bar__side:active:not(:disabled) {
+  transform: scale(0.9);
+  transition-duration: var(--dur-instant);
+}
+.capture-bar__library:disabled,
+.capture-bar__side:disabled {
+  opacity: var(--disabled-opacity);
+  cursor: default;
+}
+.workspace-screen[data-sticks="true"] .capture-bar__library,
+.workspace-screen[data-sticks="true"] .capture-bar__side {
+  translate: 0 calc(-1 * (var(--stick-size) + var(--space-3)));
+}
+.capture-bar__shutter-wrap {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-1);
+}
+.capture-bar__label {
+  color: var(--color-on-scene);
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  text-shadow: var(--shadow-text);
+}
+/* The shutter: a white disc inside a white ring. In a shot it carries a keyframe diamond. */
+.shutter {
+  position: relative;
+  width: var(--fab-size);
+  height: var(--fab-size);
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  box-shadow:
+    inset 0 0 0 var(--fab-ring) var(--color-on-scene),
+    var(--shadow-fab);
+  cursor: pointer;
+}
+.shutter__core {
+  width: calc(100% - var(--fab-ring) * 3);
+  height: calc(100% - var(--fab-ring) * 3);
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--color-on-scene);
+  transition:
+    transform var(--dur-base) var(--spring-snappy),
+    background var(--dur-fast) var(--ease-standard);
+}
+.shutter__diamond {
+  width: var(--space-4);
+  height: var(--space-4);
+  rotate: 45deg;
+  border-radius: var(--space-half);
+  background: var(--color-highlight);
+  box-shadow: 0 0 0 var(--border-focus) var(--color-on-scene-inverse);
+  animation: pop-in var(--dur-slow) var(--spring-bouncy) both;
+}
+.shutter:active:not(:disabled) .shutter__core {
+  transform: scale(0.84);
+  transition-duration: var(--dur-instant);
+}
+.shutter:disabled {
+  opacity: var(--disabled-opacity);
+  cursor: default;
+}
+.shutter[aria-busy="true"] .shutter__core {
+  transform: scale(0.84);
+  background: var(--color-on-scene-secondary);
+}
+.shutter.did-save .shutter__core {
+  animation: shutter-settle var(--dur-slow) var(--spring-bouncy);
+}
+.shutter.did-save::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 0 0 0 0 var(--color-on-scene);
+  animation: shutter-ring var(--dur-slow) var(--ease-standard) forwards;
+}
+
+/*
+ * The playback bar rides just above the capture bar; with the thumb sticks it clears
+ * the side buttons riding above the sticks.
+ */
+.scene-progress-dock {
+  position: absolute;
+  z-index: var(--z-raised);
+  left: calc(var(--gutter) + var(--safe-left));
+  right: calc(var(--gutter) + var(--safe-right));
+  bottom: var(--dock-bottom);
+  display: grid;
+  justify-items: center;
+  pointer-events: none;
+  transition:
+    bottom var(--dur-slow) var(--spring-smooth),
+    opacity var(--dur-base) var(--ease-standard),
+    transform var(--dur-slow) var(--spring-smooth);
+}
+.scene-progress-dock > * {
+  pointer-events: auto;
+}
+.workspace-screen[data-map="true"] .scene-progress-dock {
+  opacity: 0;
+  transform: translate3d(0, var(--space-7), 0) scale(0.9);
+  pointer-events: none;
+}
+
+/*
+ * Playback bar over the scene: a glass capsule with play, a scrubbable rail, and a
+ * diamond per keyframe. --playhead (0–1) is set on .scene-progress every frame.
+ */
+.scene-progress {
+  --key-size: var(--space-2);
+  width: min(100%, var(--scene-progress-max-w));
+  height: var(--scene-progress-h);
+  padding: 0 var(--space-3) 0 var(--space-1);
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--space-2);
+  border-radius: var(--radius-pill);
+  background: var(--material-regular);
+  -webkit-backdrop-filter: var(--material-blur);
+  backdrop-filter: var(--material-blur);
+  box-shadow:
+    inset 0 0 0 var(--border-hairline) var(--material-edge),
+    var(--shadow-float);
+  color: var(--color-on-scene);
+  animation: scene-progress-in var(--dur-slow) var(--spring-smooth) both;
+}
+@keyframes scene-progress-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, var(--space-3), 0) scaleX(0.6);
+  }
+}
+.scene-progress__play {
+  width: calc(var(--scene-progress-h) - var(--space-2));
+  height: calc(var(--scene-progress-h) - var(--space-2));
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--color-on-scene);
+  color: var(--color-on-scene-inverse);
+  cursor: pointer;
+  transition: transform var(--dur-base) var(--spring-snappy);
+}
+.scene-progress__play:active:not(:disabled) {
+  transform: scale(0.88);
+  transition-duration: var(--dur-instant);
+}
+.scene-progress__play:disabled {
+  opacity: var(--disabled-opacity);
+}
+.scene-progress__lane {
+  position: relative;
+  height: 100%;
+  min-width: 0;
+  /* Room for the end diamonds so they never touch the play button or the time. */
+  margin: 0 var(--space-2);
+}
+.scene-progress__track {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  touch-action: none;
+  cursor: pointer;
+}
+.scene-progress__track:focus-visible {
+  outline: var(--border-focus) solid var(--color-accent);
+  outline-offset: var(--space-half);
+  border-radius: var(--radius-sm);
+}
+.scene-progress__rail {
+  position: relative;
+  width: 100%;
+  height: var(--space-1);
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background: var(--color-on-scene-tertiary);
+  transition: height var(--dur-base) var(--spring-snappy);
+}
+.scene-progress[data-scrubbing="true"] .scene-progress__rail {
+  height: var(--space-2);
+}
+.scene-progress__fill {
+  position: absolute;
+  inset: 0;
+  transform-origin: left center;
+  transform: scaleX(var(--playhead, 0));
+  background: var(--color-accent);
+}
+.scene-progress__head {
+  position: absolute;
+  top: 50%;
+  left: calc(var(--playhead, 0) * 100%);
+  width: var(--space-3);
+  height: var(--space-3);
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: var(--color-on-scene);
+  box-shadow: var(--shadow-knob);
+  transition: scale var(--dur-base) var(--spring-bouncy);
+}
+.scene-progress[data-scrubbing="true"] .scene-progress__head {
+  scale: 1.35;
+}
+.scene-progress__keys {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  pointer-events: none;
+}
+.scene-progress__keys > li {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  translate: -50% 0;
+  animation: pop-in var(--dur-slow) var(--spring-bouncy) both;
+  animation-delay: calc(min(var(--i, 0), var(--stagger-max)) * var(--stagger-step));
+}
+/* A thumb-width target around a small diamond that sits on the rail. */
+.scene-progress__key {
+  width: var(--space-6);
+  height: 100%;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  pointer-events: auto;
+  cursor: pointer;
+}
+.scene-progress__key i {
+  width: var(--key-size);
+  height: var(--key-size);
+  rotate: 45deg;
+  border-radius: var(--space-half);
+  background: var(--color-scene);
+  box-shadow: 0 0 0 var(--border-focus) var(--color-on-scene);
+  transition:
+    scale var(--dur-base) var(--spring-bouncy),
+    background var(--dur-fast) var(--ease-standard);
+}
+.scene-progress__key:active i {
+  scale: 0.8;
+}
+.scene-progress__key[data-active="true"] i {
+  scale: 1.4;
+  background: var(--color-highlight);
+  box-shadow: 0 0 0 var(--border-focus) var(--color-scene);
+}
+.scene-progress__time {
+  color: var(--color-on-scene);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.scene-progress__time small {
+  color: var(--color-on-scene-secondary);
+  font-size: inherit;
+}
+/* Outside Compose the scene only needs room for the back bar. */
+.workspace-screen:not([data-stage="compose"]) .workspace-viewport .scene-stage {
+  top: calc(var(--safe-top) + var(--space-2) + var(--hit-min) + var(--space-2));
+  bottom: var(--viewport-bottom-edge);
+}
+@keyframes shutter-settle {
+  30% {
+    transform: scale(0.88);
+  }
+}
+@keyframes shutter-ring {
+  to {
+    box-shadow: 0 0 0 var(--space-5) transparent;
+  }
+}
+
+/* ── Stage panel ────────────────────────────────────── */
+.stage-panel {
+  position: relative;
+  z-index: var(--z-bar);
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  margin-top: calc(var(--radius-xl) * -1);
+  background: var(--material-chrome);
+  -webkit-backdrop-filter: var(--material-blur);
+  backdrop-filter: var(--material-blur);
+  box-shadow: inset 0 var(--border-hairline) 0 var(--material-edge);
+}
+.stage-grabber {
+  height: var(--space-5);
+  display: grid;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.stage-grabber span {
+  width: var(--sheet-handle-w);
+  height: var(--sheet-handle-h);
+  border-radius: var(--radius-pill);
+  background: var(--color-text-tertiary);
+  transition: width var(--dur-base) var(--spring-snappy);
+}
+.stage-grabber:active span {
+  width: calc(var(--sheet-handle-w) * 1.4);
+}
+.stage-content {
+  height: var(--stage-panel-peek-h);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0 calc(var(--gutter) + var(--safe-right)) var(--space-4)
+    calc(var(--gutter) + var(--safe-left));
+  transition: height var(--dur-slow) var(--spring-smooth);
+  animation: stage-swap var(--dur-base) var(--spring-smooth);
+}
+.workspace-screen[data-expanded="true"] .stage-content {
+  height: var(--stage-panel-expanded-h);
+}
+@keyframes stage-swap {
+  from {
+    opacity: 0;
+    transform: translate3d(0, var(--space-2), 0);
+  }
+}
+/* Tab bar with a glass pill that slides to the selected stage. */
+.stage-tabs {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  min-height: calc(var(--tab-bar-h) + var(--safe-bottom));
+  padding: var(--space-1) calc(var(--space-3) + var(--safe-right))
+    calc(var(--space-1) + var(--safe-bottom)) calc(var(--space-3) + var(--safe-left));
+  box-shadow: inset 0 var(--border-hairline) 0 var(--color-separator);
+}
+.stage-tabs::before {
+  --tab: 0;
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: var(--space-1);
+  left: calc(var(--space-3) + var(--safe-left));
+  width: calc((100% - var(--space-3) * 2 - var(--safe-left) - var(--safe-right)) / 3);
+  height: calc(var(--tab-bar-h) - var(--space-2));
+  border-radius: var(--radius-pill);
+  background: var(--color-fill-3);
+  transform: translate3d(calc(100% * var(--tab)), 0, 0);
+  transition: transform var(--dur-slow) var(--spring-smooth);
+}
+.stage-tabs:has(> :nth-child(2).is-active)::before {
+  --tab: 1;
+}
+.stage-tabs:has(> :nth-child(3).is-active)::before {
+  --tab: 2;
+}
+.stage-tabs button {
+  position: relative;
+  min-height: calc(var(--tab-bar-h) - var(--space-2));
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: var(--space-half);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-medium);
+  cursor: pointer;
+  transition:
+    color var(--dur-fast) var(--ease-standard),
+    transform var(--dur-base) var(--spring-snappy);
+}
+.stage-tabs button:active {
+  transform: scale(var(--press-scale));
+}
+.stage-tabs button.is-active {
+  color: var(--color-accent);
+}
+.stage-tabs button.is-active svg {
+  animation: tab-bounce var(--dur-slow) var(--spring-bouncy);
+}
+@keyframes tab-bounce {
+  40% {
+    transform: scale(1.15);
+  }
+}
+.tab-count {
+  position: absolute;
+  top: 0;
+  left: calc(50% + var(--space-2));
+  min-width: var(--icon-md);
+  padding: 0 var(--space-1);
+  border-radius: var(--radius-pill);
+  background: var(--color-danger);
+  color: var(--color-text-on-accent);
+  font: var(--weight-semibold) var(--text-2xs) var(--font-rounded);
+  font-style: normal;
+  font-variant-numeric: tabular-nums;
+  line-height: var(--leading-snug);
+  animation: pop-in var(--dur-slow) var(--spring-bouncy) both;
+}
+
+/* ── Compose ─────────────────────────────────────────── */
+.compose-panel {
+  display: grid;
+  gap: var(--space-3);
+  padding-bottom: var(--space-4);
+}
+/* What is being edited: the shot (or the free camera) and how to leave it. */
+.compose-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.compose-header > div {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  gap: var(--space-half);
+}
+.compose-header strong {
+  overflow: hidden;
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-display);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.compose-header small {
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+}
+/* One section at a time; switching crossfades and rises slightly. */
+.compose-section {
+  display: grid;
+  gap: var(--space-3);
+  animation: stage-swap var(--dur-base) var(--spring-smooth);
+}
+.compose-section > div {
+  display: grid;
+  gap: var(--space-3);
+}
+.compose-empty {
+  margin: 0;
+  display: grid;
+  gap: var(--space-3);
+}
+/* A grouped-list row that opens a sheet. */
+.compose-row {
+  min-height: var(--hit-comfy);
+  padding: var(--space-2) var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  border: 0;
+  border-radius: var(--radius-lg);
+  background: var(--color-fill-4);
+  color: var(--color-text);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform var(--dur-base) var(--spring-snappy),
+    background-color var(--dur-fast) var(--ease-standard);
+}
+.compose-row:active {
+  transform: scale(var(--press-scale));
+  background: var(--color-fill-3);
+}
+.compose-row > span {
+  display: grid;
+  gap: var(--space-half);
+}
+.compose-row b {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+}
+.compose-row small {
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+}
+.compose-row svg {
+  color: var(--color-text-tertiary);
+}
+.notes-section {
+  display: grid;
+  gap: var(--space-3);
+}
+.notes-section .field {
+  margin: 0;
+}
+.notes-section textarea {
+  min-height: calc(var(--hit-min) * 3);
+  resize: vertical;
+}
+/* Disclosure groups render as inset grouped cells. */
+.tool-section {
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--color-fill-4);
+}
+.tool-section > summary {
+  min-height: var(--hit-comfy);
+  padding: 0 var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+  list-style: none;
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease-standard);
+}
+.tool-section > summary:active {
+  background: var(--color-fill-3);
+}
+.tool-section > summary::-webkit-details-marker {
+  display: none;
+}
+.tool-section > summary::after {
+  content: "";
+  width: var(--space-2);
+  height: var(--space-2);
+  border-right: var(--border-focus) solid var(--color-text-tertiary);
+  border-bottom: var(--border-focus) solid var(--color-text-tertiary);
+  rotate: -45deg;
+  transition: rotate var(--dur-base) var(--spring-smooth);
+}
+.tool-section[open] > summary::after {
+  rotate: 45deg;
+}
+.tool-section[open] > .tool-body {
+  animation: stage-swap var(--dur-base) var(--spring-smooth);
+}
+.tool-body {
+  padding: 0 var(--space-4) var(--space-4);
+  display: grid;
+  gap: var(--space-3);
+}
+.workspace-screen .range-control {
+  margin: 0;
+}
+.workspace-screen .range-control b,
+.workspace-screen .range-control output,
+.workspace-screen .toggle-row {
+  font-size: var(--text-md);
+}
+.workspace-screen .toggle-row {
+  min-height: var(--hit-min);
+}
+
+/* ── Shots ───────────────────────────────────────────── */
+.shots-toolbar {
+  margin-bottom: var(--space-3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+.shot-collection {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.shot-collection.is-storyboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--shot-card-min-w)), 1fr));
+  gap: var(--space-4) var(--space-3);
+}
+.shot-collection.is-list {
+  overflow: hidden;
+  display: grid;
+  border-radius: var(--radius-lg);
+  background: var(--color-fill-4);
+}
+.shot-item {
+  position: relative;
+  min-width: 0;
+  animation: stagger-rise var(--dur-slow) var(--spring-smooth) both;
+  animation-delay: calc(min(var(--i, 0), var(--stagger-max)) * var(--stagger-step));
+}
+.shot-item.is-excluded .shot-item__frame {
+  opacity: var(--dim-opacity);
+}
+.is-list .shot-item {
+  display: grid;
+  grid-template-columns: calc(var(--fab-size) + var(--space-6)) 1fr auto;
+  gap: var(--space-3);
+  align-items: center;
+  padding: var(--space-2) var(--space-2) var(--space-2) var(--space-3);
+}
+.is-list .shot-item + .shot-item::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: calc(var(--fab-size) + var(--space-6) + var(--space-3) * 2);
+  height: var(--border-hairline);
+  background: var(--color-separator);
+  transform: scaleY(0.5);
+}
+.shot-item__frame {
+  position: relative;
+  width: 100%;
+  max-height: calc(var(--fab-size) * 2.5);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--color-fill-3);
+  color: var(--color-text-tertiary);
+  cursor: pointer;
+  transition: transform var(--dur-base) var(--spring-snappy);
+}
+.shot-item__frame:active {
+  transform: scale(var(--press-scale));
+}
+.shot-item__frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.is-list .shot-item__frame {
+  border-radius: var(--radius-sm);
+}
+.shot-item__number {
+  position: absolute;
+  left: var(--space-1);
+  top: var(--space-1);
+  padding: 0 var(--space-1);
+  border-radius: var(--radius-xs);
+  background: var(--material-thin);
+  -webkit-backdrop-filter: var(--material-blur);
+  backdrop-filter: var(--material-blur);
+  color: var(--color-text);
+  font: var(--weight-semibold) var(--text-2xs) var(--font-rounded);
+  font-style: normal;
+  font-variant-numeric: tabular-nums;
+}
+.shot-item__meta {
+  min-width: 0;
+  padding-top: var(--space-2);
+  display: grid;
+  gap: var(--space-half);
+}
+.is-list .shot-item__meta {
+  padding: 0;
+}
+.shot-item__meta strong {
+  overflow: hidden;
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.shot-item__meta small {
+  color: var(--color-text-secondary);
+  font-size: var(--text-xs);
+}
+.shot-item__notes {
+  margin: 0;
+  display: -webkit-box;
+  overflow: hidden;
+  color: var(--color-text-secondary);
+  font-size: var(--text-xs);
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+.shot-item__actions {
+  display: flex;
+  align-items: center;
+}
+.is-storyboard .shot-item__actions {
+  position: absolute;
+  top: var(--space-1);
+  right: var(--space-1);
+}
+.is-storyboard .shot-item__actions .icon-btn {
+  width: var(--space-7);
+  height: var(--space-7);
+  background: var(--material-thin);
+  -webkit-backdrop-filter: var(--material-blur);
+  backdrop-filter: var(--material-blur);
+}
+.include-toggle {
+  width: var(--hit-min);
+  height: var(--hit-min);
+  display: grid;
+  place-items: center;
+}
+.include-toggle input {
+  width: var(--icon-md);
+  height: var(--icon-md);
+  accent-color: var(--color-accent);
+}
+.compact-empty {
+  padding: var(--space-4);
+}
+
+/* ── Export ──────────────────────────────────────────── */
+.export-panel {
+  display: grid;
+  gap: var(--space-3);
+}
+.export-card {
+  padding: var(--space-4);
+  display: grid;
+  gap: var(--space-3);
+  border-radius: var(--radius-lg);
+  background: var(--color-fill-4);
+}
+.export-card h3 {
+  margin: 0;
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+}
+.export-card .meta {
+  margin: 0;
+  line-height: var(--leading-normal);
+}
+.export-summary {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+}
+.export-summary.is-warning {
+  color: var(--color-warning);
+}
+/* Sequence export: the shot list in order, each shot a checkable row. */
+.sequence-list {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background: var(--color-fill-4);
+  list-style: none;
+}
+.sequence-list li + li {
+  box-shadow: inset 0 var(--border-hairline) 0 var(--color-separator);
+}
+.sequence-list label {
+  min-height: var(--hit-comfy);
+  padding: var(--space-2) var(--space-3);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  cursor: pointer;
+  transition: opacity var(--dur-fast) var(--ease-standard);
+}
+.sequence-list li[data-included="false"] label > :not(input) {
+  opacity: var(--disabled-opacity);
+}
+.sequence-list input {
+  width: var(--space-5);
+  height: var(--space-5);
+  flex: none;
+  accent-color: var(--color-accent);
+}
+.sequence-list__index {
+  min-width: var(--space-4);
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+}
+.sequence-list img,
+.sequence-list__thumb {
+  width: var(--space-10);
+  aspect-ratio: 16 / 9;
+  flex: none;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  background: var(--color-fill-3);
+}
+.sequence-list__name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  font-size: var(--text-md);
+  font-weight: var(--weight-medium);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sequence-list small {
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.shot-edit-preview {
+  width: 100%;
+  height: auto;
+  max-height: 40dvh;
+  object-fit: contain;
+  margin-bottom: var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--color-scene);
+}
+.action-thumb {
+  width: calc(var(--hit-min) + var(--space-3));
+  height: var(--hit-min);
+  object-fit: cover;
+  border-radius: var(--radius-xs);
+}
+.graph-footer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.workspace-fallback .scene-status {
+  position: relative;
+  flex: 1;
+}
+
+/* ── Thumb sticks ───────────────────────────────────── */
+.joysticks {
+  position: absolute;
+  z-index: var(--z-raised);
+  left: calc(var(--gutter) + var(--safe-left));
+  right: calc(var(--gutter) + var(--safe-right));
+  bottom: var(--viewport-bottom-edge);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  pointer-events: none;
+  animation: sticks-in var(--dur-slow) var(--spring-smooth) both;
+}
+@keyframes sticks-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, var(--space-4), 0);
+  }
+}
+.joysticks > *,
+.joysticks__right > * {
+  pointer-events: auto;
+}
+.joysticks__right {
+  position: relative;
+  pointer-events: none;
+}
+.stick {
+  position: relative;
+  width: var(--stick-size);
+  height: var(--stick-size);
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-pill);
+  background: var(--material-ultrathin);
+  -webkit-backdrop-filter: var(--material-blur);
+  backdrop-filter: var(--material-blur);
+  box-shadow: inset 0 0 0 var(--border-hairline) var(--material-edge);
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  transition:
+    transform var(--dur-base) var(--spring-snappy),
+    box-shadow var(--dur-fast) var(--ease-standard);
+}
+.stick[data-active="true"] {
+  transform: scale(1.04);
+  box-shadow: inset 0 0 0 var(--border-focus) var(--color-on-scene-secondary);
+}
+.stick[aria-disabled="true"] {
+  opacity: var(--dim-opacity);
+}
+/* The knob follows the finger exactly, then springs home on release. */
+.stick__knob {
+  width: var(--stick-knob);
+  height: var(--stick-knob);
+  border-radius: var(--radius-pill);
+  background: var(--color-on-scene);
+  box-shadow: var(--shadow-knob);
+  transition:
+    translate var(--dur-slow) var(--spring-bouncy),
+    scale var(--dur-base) var(--spring-snappy);
+}
+.stick[data-active="true"] .stick__knob {
+  scale: 0.9;
+  transition: scale var(--dur-base) var(--spring-snappy);
+}
+.crane {
+  position: absolute;
+  right: 0;
+  bottom: calc(var(--stick-size) + var(--space-2));
+  display: flex;
+  gap: var(--space-1);
+}
+.crane__button {
+  width: var(--hit-min);
+  height: var(--hit-min);
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--material-ultrathin);
+  -webkit-backdrop-filter: var(--material-blur);
+  backdrop-filter: var(--material-blur);
+  box-shadow: inset 0 0 0 var(--border-hairline) var(--material-edge);
+  color: var(--color-on-scene);
+  touch-action: none;
+  cursor: pointer;
+  transition:
+    transform var(--dur-base) var(--spring-snappy),
+    background-color var(--dur-fast) var(--ease-standard);
+}
+.crane__button:active:not(:disabled) {
+  transform: scale(0.9);
+  background: var(--color-on-scene);
+  color: var(--color-on-scene-inverse);
+  transition-duration: var(--dur-instant);
+}
+
+/* ── Camera readout and focus ───────────────────────── */
+.camera-hud {
+  position: absolute;
+  z-index: var(--z-raised);
+  top: var(--viewport-top-reserve);
+  right: calc(var(--gutter) + var(--safe-right));
+  margin: 0;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+  background: var(--material-ultrathin);
+  -webkit-backdrop-filter: var(--material-blur);
+  backdrop-filter: var(--material-blur);
+  color: var(--color-highlight);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
+/* Tap-to-focus: a yellow square that pulses gently, like the Camera app. */
+.focus-reticle {
+  position: absolute;
+  z-index: var(--z-raised);
+  left: 50%;
+  top: calc(var(--viewport-top-reserve) + var(--space-6));
+  translate: -50% 0;
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-lg);
+  background: var(--material-ultrathin);
+  -webkit-backdrop-filter: var(--material-blur);
+  backdrop-filter: var(--material-blur);
+  color: var(--color-highlight);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  pointer-events: none;
+  animation: pop-in var(--dur-slow) var(--spring-bouncy) both;
+}
+.focus-reticle span {
+  width: var(--icon-lg);
+  height: var(--icon-lg);
+  border: var(--border-hairline) solid var(--color-highlight);
+  animation: focus-pulse var(--dur-ambient) var(--ease-standard) infinite;
+}
+@keyframes focus-pulse {
+  50% {
+    transform: scale(0.85);
+    opacity: var(--dim-opacity);
+  }
+}
+
+/* ── Shot editor ────────────────────────────────────── */
+.shot-timing {
+  display: grid;
+  gap: var(--space-4);
+}
+.keyframe-detail {
+  flex-wrap: wrap;
+  padding: var(--space-3);
+  border-radius: var(--radius-lg);
+  background: var(--color-fill-4);
+  animation: stage-swap var(--dur-base) var(--spring-smooth);
+}
+.keyframe-detail > small {
+  flex-basis: 100%;
+}
+.keyframe-detail__badge {
+  height: var(--hit-min);
+  padding: 0 var(--space-3);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  border-radius: var(--radius-pill);
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  font-weight: var(--weight-semibold);
+  font-variant-numeric: tabular-nums;
+}
+.keyframe-detail__badge i {
+  width: var(--space-2);
+  height: var(--space-2);
+  rotate: 45deg;
+  border-radius: var(--space-px);
+  background: var(--color-highlight);
+}
+.keyframe-detail,
+.length-control {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-3);
+}
+.length-control .range-control {
+  flex: 1;
+}
+.field--inline {
+  margin: 0;
+  display: grid;
+  gap: var(--space-1);
+  font-size: var(--text-xs);
+}
+.field--inline > span {
+  padding: 0;
+}
+.field--inline input {
+  width: calc(var(--hit-min) * 2);
+  height: var(--hit-min);
+  padding: 0 var(--space-3);
+  background: var(--color-fill-3);
+  font-variant-numeric: tabular-nums;
+}
+.speed-control {
+  display: grid;
+  gap: var(--space-2);
+}
+.speed-control__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  font-size: var(--text-md);
+}
+.speed-control__head select {
+  min-height: var(--hit-min);
+}
+.focus-control {
+  display: grid;
+  gap: var(--space-2);
+  justify-items: start;
+}
+.focus-control .range-control {
+  width: 100%;
+}
+.nudge-pad {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-2);
+}
+.nudge-pad .btn {
+  min-height: var(--hit-min);
+  justify-content: flex-start;
+  gap: var(--space-2);
+  font-size: var(--text-md);
+  touch-action: none;
+}
+.shot-item__moving {
+  position: absolute;
+  right: var(--space-1);
+  bottom: var(--space-1);
+  padding: var(--space-1);
+  display: grid;
+  border-radius: var(--radius-pill);
+  background: var(--material-thin);
+  -webkit-backdrop-filter: var(--material-blur);
+  backdrop-filter: var(--material-blur);
+  color: var(--color-highlight);
+}
+
+/* ── Scene viewer frame ─────────────────────────────── */
+.scene-stage {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--color-scene);
+}
+.output-frame {
+  position: absolute;
+  overflow: hidden;
+  border-radius: var(--radius-xs);
+}
+.scene-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  background: var(--color-scene);
+  touch-action: none;
+}
+/* Rule-of-thirds guides: two hairlines each way. */
+.composition-grid {
+  --line-a: calc(33.333% - var(--border-hairline) / 2);
+  --line-b: calc(33.333% + var(--border-hairline) / 2);
+  --line-c: calc(66.667% - var(--border-hairline) / 2);
+  --line-d: calc(66.667% + var(--border-hairline) / 2);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      to right,
+      transparent var(--line-a),
+      var(--color-scene-guide) var(--line-a) var(--line-b),
+      transparent var(--line-b) var(--line-c),
+      var(--color-scene-guide) var(--line-c) var(--line-d),
+      transparent var(--line-d)
+    ),
+    linear-gradient(
+      to bottom,
+      transparent var(--line-a),
+      var(--color-scene-guide) var(--line-a) var(--line-b),
+      transparent var(--line-b) var(--line-c),
+      var(--color-scene-guide) var(--line-c) var(--line-d),
+      transparent var(--line-d)
+    );
+}
+.safe-frame {
+  position: absolute;
+  inset: 0;
+  border: var(--border-hairline) solid var(--color-on-scene-secondary);
+  border-radius: inherit;
+  pointer-events: none;
+}
+.safe-frame span {
+  position: absolute;
+  top: var(--space-2);
+  left: var(--space-2);
+  color: var(--color-on-scene-secondary);
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-medium);
+}
+.scene-status {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  background: var(--color-scene);
+  color: var(--color-on-scene-secondary);
+  font-size: var(--text-md);
+}
+.load-progress {
+  color: var(--color-on-scene);
+  font-variant-numeric: tabular-nums;
+}
+.load-bar {
+  flex-basis: 100%;
+  max-width: var(--load-bar-w);
+  height: var(--slider-track-h);
+  margin: var(--space-3) auto 0;
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background: var(--color-fill-1);
+}
+.load-bar i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--color-accent);
+  transition: width var(--dur-fast) var(--ease-standard);
+}
+.scene-status.error {
+  z-index: var(--z-raised);
+  flex-direction: column;
+  padding: var(--space-7);
+  color: var(--color-danger);
+  text-align: center;
+}
+.scene-status.error span {
+  max-width: var(--content-max-w);
+  line-height: var(--leading-normal);
+}
+
+/* ── Magic Window (handheld) ────────────────────────── */
+.magic-window-controls {
+  position: absolute;
+  z-index: var(--z-raised);
+  right: var(--space-3);
+  top: var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.magic-toggle,
+.magic-action,
+.tracking-chip {
+  height: var(--hit-min);
+  padding: 0 var(--space-4);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--material-ultrathin);
+  -webkit-backdrop-filter: var(--material-blur);
+  backdrop-filter: var(--material-blur);
+  box-shadow: inset 0 0 0 var(--border-hairline) var(--material-edge);
+  color: var(--color-on-scene);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  cursor: pointer;
+  transition: transform var(--dur-base) var(--spring-snappy);
+}
+.magic-toggle:active:not(:disabled),
+.magic-action:active {
+  transform: scale(var(--press-scale));
+}
+.magic-toggle svg {
+  color: var(--color-highlight);
+}
+.magic-toggle:disabled {
+  opacity: var(--disabled-opacity);
+}
+.magic-action.exit {
+  width: var(--hit-min);
+  padding: 0;
+  justify-content: center;
+}
+.magic-error {
+  max-width: calc(var(--card-wide-min-w) - var(--space-8));
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--material-regular);
+  color: var(--color-danger);
+  font-size: var(--text-xs);
+  line-height: var(--leading-normal);
+}
+.tracking-chip {
+  cursor: default;
+  font-size: var(--text-xs);
+}
+.tracking-chip i {
+  width: var(--dot-sm);
+  height: var(--dot-sm);
+  border-radius: var(--radius-pill);
+  background: var(--color-text-tertiary);
+}
+.tracking-chip.quality-normal i {
+  background: var(--color-success);
+}
+.tracking-chip.quality-limited i {
+  background: var(--color-warning);
+}
+.tracking-chip.quality-unavailable i {
+  background: var(--color-danger);
+}
+.tracking-chip.quality-initializing i {
+  animation: tracking-pulse var(--dur-ambient) var(--ease-standard) infinite;
+}
+@keyframes tracking-pulse {
+  50% {
+    opacity: var(--disabled-opacity);
+  }
+}
+
+/* ── Map view ──────────────────────────────────────── */
+/*
+ * The map opens out of the composed frame: the canvas goes full bleed but starts
+ * clipped to the letterbox, which then irises open while the camera rises. The dive
+ * closes it again, landing exactly in the output frame.
+ */
+.output-frame[data-bleed="true"] {
+  border-radius: 0;
+  clip-path: var(--letterbox);
+  transition: clip-path var(--dur-dive) var(--ease-emphasized);
+}
+.output-frame[data-letterbox="open"] {
+  clip-path: inset(0);
+  transition-duration: var(--dur-map-enter);
+}
+.output-frame .composition-grid,
+.output-frame .safe-frame {
+  transition: opacity var(--dur-base) var(--ease-standard);
+}
+.output-frame[data-bleed="true"] .composition-grid,
+.output-frame[data-bleed="true"] .safe-frame {
+  opacity: 0;
+}
+.workspace-screen[data-map="true"] .workspace-viewport .scene-stage {
+  top: 0;
+  bottom: 0;
+}
+.stage-panel {
+  transition: transform var(--dur-slow) var(--spring-smooth);
+}
+.workspace-screen[data-map="true"] .stage-panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transform: translate3d(0, 100%, 0);
+  pointer-events: none;
+}
+.workspace-topbar,
+.camera-hud,
+.capture-bar {
+  transition:
+    opacity var(--dur-base) var(--ease-standard),
+    transform var(--dur-slow) var(--spring-smooth);
+}
+.workspace-screen[data-map="true"] .workspace-topbar,
+.workspace-screen[data-map="true"] .camera-hud {
+  opacity: 0;
+  transform: translate3d(0, calc(var(--space-6) * -1), 0);
+  pointer-events: none;
+}
+.workspace-screen[data-map="true"] .capture-bar,
+.workspace-screen[data-map="true"] .magic-window-controls {
+  opacity: 0;
+  transform: translate3d(0, var(--space-7), 0) scale(0.9);
+  pointer-events: none;
+}
+
+.map-mode {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-bar);
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  pointer-events: none;
+}
+.map-mode > * {
+  pointer-events: auto;
+}
+.map-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: calc(var(--safe-top) + var(--space-2)) calc(var(--space-3) + var(--safe-right)) 0
+    calc(var(--space-3) + var(--safe-left));
+  pointer-events: none;
+  animation: map-chrome-in var(--dur-slow) var(--spring-smooth) both;
+  animation-delay: calc(var(--dur-map-enter) * 0.45);
+}
+.map-topbar > * {
+  pointer-events: auto;
+}
+@keyframes map-chrome-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, calc(var(--space-6) * -1), 0);
+  }
+}
+/* The roof toggle: filled while the sky or ceiling is shown. */
+.map-roof {
+  padding: 0 var(--space-3);
+  transition:
+    transform var(--dur-base) var(--spring-snappy),
+    background-color var(--dur-fast) var(--ease-standard),
+    color var(--dur-fast) var(--ease-standard);
+}
+.map-roof[aria-pressed="true"] {
+  background: var(--color-on-scene);
+  color: var(--color-on-scene-inverse);
+}
+.map-glass {
+  min-height: var(--hit-min);
+  padding: 0 var(--space-4);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--material-ultrathin);
+  -webkit-backdrop-filter: var(--material-blur);
+  backdrop-filter: var(--material-blur);
+  box-shadow: inset 0 0 0 var(--border-hairline) var(--material-edge);
+  color: var(--color-on-scene);
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+  cursor: pointer;
+  transition: transform var(--dur-base) var(--spring-snappy);
+}
+.map-glass:active:not(:disabled) {
+  transform: scale(0.92);
+  transition-duration: var(--dur-instant);
+}
+.map-glass:disabled {
+  opacity: var(--disabled-opacity);
+}
+.map-rotate {
+  display: flex;
+  gap: var(--space-1);
+}
+.map-round {
+  width: var(--hit-min);
+  padding: 0;
+}
+/* The compass needle turns live with the map (set per frame, no transition). */
+.map-compass {
+  --azimuth: 0rad;
+}
+.map-compass svg {
+  color: var(--color-highlight);
+  transform: rotate(var(--azimuth));
+}
+.map-hint {
+  justify-self: center;
+  max-width: calc(100% - var(--space-8));
+  margin: var(--space-3) 0 0;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-pill);
+  background: var(--material-ultrathin);
+  -webkit-backdrop-filter: var(--material-blur);
+  backdrop-filter: var(--material-blur);
+  color: var(--color-on-scene);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  text-align: center;
+  pointer-events: none;
+  animation: map-hint-in var(--dur-slow) var(--spring-smooth) both;
+}
+.map-hint:empty {
+  visibility: hidden;
+}
+@keyframes map-hint-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, calc(var(--space-2) * -1), 0) scale(0.96);
+  }
+}
+
+/* Dock: a glass capsule holding the cinematographer and, once placed, Go. */
+.map-dock {
+  grid-row: 4;
+  justify-self: center;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: calc(var(--safe-bottom) + var(--space-5));
+  padding: var(--map-dock-pad) var(--space-4);
+  border-radius: var(--radius-pill);
+  background: var(--material-regular);
+  -webkit-backdrop-filter: var(--material-blur);
+  backdrop-filter: var(--material-blur);
+  box-shadow:
+    inset 0 0 0 var(--border-hairline) var(--material-edge),
+    var(--shadow-float);
+  animation: map-dock-in var(--dur-sheet) var(--spring-bouncy) both;
+  animation-delay: calc(var(--dur-map-enter) * 0.55);
+}
+@keyframes map-dock-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, var(--space-10), 0) scale(0.9);
+  }
+}
+.map-token {
+  --drag-x: 0px;
+  --drag-y: 0px;
+  position: relative;
+  z-index: var(--z-toast);
+  width: var(--map-token-w);
+  height: var(--map-token-h);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: grab;
+  touch-action: none;
+  translate: var(--drag-x) var(--drag-y);
+  transition:
+    scale var(--dur-base) var(--spring-bouncy),
+    rotate var(--dur-base) var(--spring-bouncy);
+}
+.map-token img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  animation: token-bob calc(var(--dur-ambient) * 1.5) var(--ease-standard) infinite;
+  transition:
+    opacity var(--dur-fast) var(--ease-standard),
+    scale var(--dur-base) var(--spring-snappy);
+}
+@keyframes token-bob {
+  50% {
+    transform: translate3d(0, calc(var(--space-1) * -1), 0);
+  }
+}
+.map-token__shadow {
+  position: absolute;
+  left: 20%;
+  right: 20%;
+  bottom: calc(var(--space-1) * -1);
+  height: var(--space-2);
+  border-radius: var(--radius-pill);
+  background: radial-gradient(closest-side, var(--color-scrim), transparent);
+  transition:
+    opacity var(--dur-fast) var(--ease-standard),
+    scale var(--dur-base) var(--spring-smooth);
+}
+/* Picked up: the token lifts and tilts; its shadow stays behind on the dock. */
+.map-token[data-state="lifted"],
+.map-token[data-state="handed-off"] {
+  cursor: grabbing;
+  scale: 1.14;
+  rotate: -6deg;
+}
+.map-token[data-state="lifted"] img,
+.map-token[data-state="handed-off"] img {
+  animation: none;
+}
+.map-token[data-state="lifted"] .map-token__shadow,
+.map-token[data-state="handed-off"] .map-token__shadow {
+  opacity: 0;
+  scale: 0.5;
+}
+/* Over solid ground the 3D figure takes over from the flat token. */
+.map-token[data-state="handed-off"] img {
+  opacity: 0;
+  scale: 0.6;
+}
+/* Released: spring back home to the dock. */
+.map-token[data-state="returning"] {
+  transition:
+    translate var(--dur-sheet) var(--spring-bouncy),
+    scale var(--dur-base) var(--spring-bouncy),
+    rotate var(--dur-base) var(--spring-bouncy);
+}
+.map-token:disabled {
+  opacity: var(--disabled-opacity);
+}
+
+.map-go {
+  position: relative;
+  min-height: var(--hit-comfy);
+  padding: 0 var(--space-5);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--color-on-scene);
+  color: var(--color-on-scene-inverse);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+  cursor: pointer;
+  animation: pop-in var(--dur-slow) var(--spring-bouncy) both;
+  transition: transform var(--dur-base) var(--spring-snappy);
+}
+.map-go svg {
+  color: var(--color-accent);
+}
+.map-go:active {
+  transform: scale(0.92);
+}
+/* Auto-Go countdown: a ring drawn around the button, paused while aiming. */
+.map-go__ring {
+  position: absolute;
+  inset: calc((var(--border-thick) + var(--space-1)) * -1);
+  width: calc(100% + (var(--border-thick) + var(--space-1)) * 2);
+  height: calc(100% + (var(--border-thick) + var(--space-1)) * 2);
+  overflow: visible;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-fast) var(--ease-standard);
+}
+.map-go__ring rect {
+  x: calc(var(--border-thick) / 2);
+  y: calc(var(--border-thick) / 2);
+  width: calc(100% - var(--border-thick));
+  height: calc(100% - var(--border-thick));
+  rx: var(--radius-pill);
+  fill: none;
+  stroke-width: var(--border-thick);
+}
+.map-go__track {
+  stroke: var(--color-fill-1);
+}
+.map-go__progress {
+  stroke: var(--color-highlight);
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+.map-go[data-countdown="true"] .map-go__ring {
+  opacity: 1;
+}
+.map-go[data-countdown="true"] .map-go__progress {
+  animation: map-countdown var(--dur-countdown) linear forwards;
+}
+@keyframes map-countdown {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+/* Diving or leaving: the chrome melts away as the camera moves. */
+.map-mode[data-phase="diving"] > *,
+.map-mode[data-phase="exiting"] > * {
+  opacity: 0;
+  transform: scale(0.96);
+  pointer-events: none;
+  transition:
+    opacity var(--dur-base) var(--ease-standard),
+    transform var(--dur-slow) var(--spring-smooth);
+}
+
+/* ── Shots overview ─────────────────────────────────── */
+/*
+ * On the Shots tab the scene rises to an isometric overview. Numbered pins sit on
+ * each saved camera (positioned every frame from the engine) and pop in, one after
+ * another, once the rise lands.
+ */
+.shots-overview {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-raised);
+  pointer-events: none;
+}
+.shots-overview__hint {
+  position: absolute;
+  top: calc(var(--safe-top) + var(--space-2) + var(--hit-min) + var(--space-3));
+  left: 50%;
+  translate: -50% 0;
+  margin: 0;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+  background: var(--material-regular);
+  -webkit-backdrop-filter: var(--material-blur);
+  backdrop-filter: var(--material-blur);
+  color: var(--color-on-scene);
+  font-size: var(--text-xs);
+  white-space: nowrap;
+  opacity: 0;
+}
+.shots-overview[data-phase="map"] .shots-overview__hint {
+  animation: overview-hint var(--dur-hint) var(--ease-standard) both;
+}
+@keyframes overview-hint {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, calc(var(--space-2) * -1), 0);
+  }
+  10%,
+  80% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+.shots-overview__pins {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.overview-pin {
+  position: absolute;
+  top: 0;
+  left: 0;
+  will-change: transform;
+}
+.overview-pin[data-offscreen="true"] {
+  visibility: hidden;
+}
+/* The dot marks the camera itself; the numbered head floats just above it. */
+.overview-pin::before {
+  content: "";
+  position: absolute;
+  width: var(--space-2);
+  height: var(--space-2);
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: var(--color-on-scene);
+  box-shadow: 0 0 0 var(--border-focus) var(--color-scene);
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease-standard);
+}
+.shots-overview[data-phase="map"] .overview-pin::before {
+  opacity: 1;
+}
+.overview-pin__button {
+  position: absolute;
+  bottom: var(--space-2);
+  left: 0;
+  translate: calc(-50% + var(--fan-x, 0px)) var(--fan-y, 0px);
+  display: grid;
+  justify-items: center;
+  padding: var(--space-2) var(--space-2) var(--space-1);
+  border: 0;
+  background: transparent;
+  pointer-events: auto;
+  cursor: pointer;
+  transform-origin: bottom center;
+  opacity: 0;
+  scale: 0.3;
+  transition:
+    opacity var(--dur-fast) var(--ease-standard),
+    scale var(--dur-fast) var(--ease-standard);
+}
+.shots-overview[data-phase="map"] .overview-pin__button {
+  opacity: 1;
+  scale: 1;
+  transition:
+    opacity var(--dur-base) var(--ease-standard),
+    scale var(--dur-slow) var(--spring-bouncy),
+    translate var(--dur-slow) var(--spring-bouncy);
+  transition-delay: calc(min(var(--i, 0), var(--stagger-max)) * var(--stagger-step) * 1.5);
+}
+.overview-pin__button:active:not(:disabled) {
+  scale: 0.88;
+  transition-delay: var(--dur-none);
+  transition-duration: var(--dur-instant);
+}
+.overview-pin__head {
+  position: relative;
+  width: var(--overview-pin);
+  height: var(--overview-pin);
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--color-on-scene);
+  color: var(--color-on-scene-inverse);
+  box-shadow: var(--shadow-float);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  font-variant-numeric: tabular-nums;
+  transition:
+    scale var(--dur-base) var(--spring-bouncy),
+    background var(--dur-fast) var(--ease-standard),
+    color var(--dur-fast) var(--ease-standard);
+}
+/* The pin's point, aimed at the camera dot below. */
+.overview-pin__head::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  bottom: calc(var(--space-1) * -1);
+  width: var(--space-2);
+  height: var(--space-2);
+  translate: -50% 0;
+  rotate: 45deg;
+  border-radius: var(--space-half);
+  background: inherit;
+}
+.overview-pin__moving {
+  position: absolute;
+  top: calc(var(--space-1) * -1);
+  right: calc(var(--space-1) * -1);
+  width: var(--space-3);
+  height: var(--space-3);
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--color-highlight);
+  color: var(--color-scene);
+}
+.overview-pin[data-active="true"] .overview-pin__head {
+  background: var(--color-accent);
+  color: var(--color-on-scene);
+}
+.overview-pin[data-highlight="true"] {
+  z-index: 2000 !important;
+}
+.overview-pin[data-highlight="true"] .overview-pin__head,
+.overview-pin__button:focus-visible .overview-pin__head {
+  scale: 1.3;
+}
+.overview-pin__label {
+  position: absolute;
+  bottom: calc(100% + var(--space-1));
+  padding: var(--space-half) var(--space-2);
+  border-radius: var(--radius-pill);
+  background: var(--material-regular);
+  -webkit-backdrop-filter: var(--material-blur);
+  backdrop-filter: var(--material-blur);
+  color: var(--color-on-scene);
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-semibold);
+  white-space: nowrap;
+  opacity: 0;
+  translate: 0 var(--space-1);
+  transition:
+    opacity var(--dur-fast) var(--ease-standard),
+    translate var(--dur-base) var(--spring-snappy);
+}
+.overview-pin[data-highlight="true"] .overview-pin__label,
+.overview-pin__button:focus-visible .overview-pin__label,
+.overview-pin__button:hover .overview-pin__label {
+  opacity: 1;
+  translate: 0 0;
+}

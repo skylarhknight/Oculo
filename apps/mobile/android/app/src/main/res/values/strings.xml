@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Oculo</string>
+    <string name="title_activity_main">Oculo</string>
+    <string name="package_name">org.example.oculo.student</string>
+    <string name="custom_url_scheme">org.example.oculo.student</string>
+</resources>

@@ -1,0 +1,339 @@
+/* Layout for gallery, project, settings, and splash. Token-only. */
+
+/* ── Splash → gallery hand-off (the one orchestrated load) ── */
+.splash {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-toast);
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: var(--space-3);
+  background: var(--color-bg);
+  color: var(--color-text-on-accent);
+  transition:
+    opacity var(--dur-slow) var(--ease-standard),
+    transform var(--dur-slow) var(--spring-smooth),
+    visibility var(--dur-slow) step-end;
+}
+.splash[data-leaving="true"] {
+  opacity: 0;
+  transform: scale(1.04);
+  visibility: hidden;
+}
+/* App-icon mark: a squircle that settles in with a spring while the eye draws itself. */
+.splash__mark {
+  width: calc(var(--fab-size) + var(--space-5));
+  height: calc(var(--fab-size) + var(--space-5));
+  display: grid;
+  place-items: center;
+  border-radius: calc(var(--radius-xl) + var(--space-2));
+  background: var(--color-brand-mark-bg);
+  color: var(--color-brand-mark);
+  box-shadow: var(--shadow-float);
+  animation: splash-in var(--dur-sheet) var(--spring-bouncy) both;
+}
+.eye {
+  width: 100%;
+  height: 100%;
+}
+.eye__lid {
+  stroke-dasharray: 1;
+  animation: eye-draw var(--dur-map-enter) var(--ease-reveal) both;
+  animation-delay: var(--dur-fast);
+}
+/* The lid traces itself from one corner around to the other. */
+@keyframes eye-draw {
+  from {
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+}
+.eye__iris {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: eye-open var(--dur-map-enter) var(--ease-reveal) both;
+  animation-delay: var(--dur-base);
+}
+/* The iris opens from the center once the lid is drawn. */
+@keyframes eye-open {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+}
+.splash__word {
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-hero);
+  animation: splash-word var(--dur-reveal) var(--ease-reveal) both;
+  animation-delay: var(--dur-base);
+}
+@keyframes splash-in {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+@keyframes splash-word {
+  from {
+    opacity: 0;
+    transform: translate3d(0, var(--reveal-distance), 0);
+    filter: blur(var(--space-1));
+  }
+}
+
+/* ── Gallery ─────────────────────────────────────────── */
+.gallery-bar {
+  padding-inline: calc(var(--gutter) + var(--safe-left)) calc(var(--gutter) + var(--safe-right));
+}
+.gallery-bar .chip {
+  min-height: calc(var(--hit-min) - var(--space-2));
+  color: var(--color-accent);
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+}
+.wordmark-small {
+  color: var(--color-text-secondary);
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+  opacity: 0;
+  transition: opacity var(--dur-fast) var(--ease-standard);
+}
+.screen[data-scrolled="true"] .wordmark-small {
+  opacity: 1;
+}
+.gallery-search {
+  margin-bottom: var(--space-4);
+  animation: search-in var(--dur-base) var(--spring-smooth) both;
+}
+@keyframes search-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+    transform-origin: top;
+  }
+}
+.project-grid,
+.scene-grid-cards {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.project-skeleton {
+  aspect-ratio: 4 / 5;
+}
+.gallery-note {
+  margin: var(--space-6) 0 0;
+  text-align: center;
+}
+
+/* ── Project ─────────────────────────────────────────── */
+/* Summary as an inset grouped row of three values. */
+.project-stats {
+  margin: 0 0 var(--space-2);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background: var(--color-cell);
+}
+.project-stats > div {
+  position: relative;
+  padding: var(--space-3) var(--space-4);
+}
+.project-stats > div + div::before {
+  content: "";
+  position: absolute;
+  top: var(--space-3);
+  bottom: var(--space-3);
+  left: 0;
+  width: var(--border-hairline);
+  background: var(--color-separator);
+}
+.project-stats dt {
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+}
+.project-stats dd {
+  margin: var(--space-half) 0 0;
+  font: var(--weight-semibold) var(--text-xl) var(--font-rounded);
+  font-variant-numeric: tabular-nums;
+}
+.project-stats + .meta {
+  padding-inline: var(--space-4);
+}
+
+/* ── Settings (inset grouped, like iOS Settings) ─────── */
+.settings-section {
+  margin-bottom: var(--space-6);
+}
+.settings-section > h2 {
+  margin: var(--space-4) 0 var(--space-2);
+  padding-inline: var(--space-4);
+}
+.settings-section > .meta {
+  margin: calc(var(--space-1) * -1) 0 var(--space-2);
+  padding-inline: var(--space-4);
+}
+.settings-card {
+  padding: var(--space-3) var(--space-4);
+  display: grid;
+  gap: var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--color-cell);
+}
+.settings-card .field {
+  margin: 0;
+}
+.settings-card .field > span {
+  padding: 0;
+}
+.settings-card .field select,
+.settings-card .field input {
+  background: var(--color-fill-4);
+}
+.settings-presets {
+  margin-top: var(--space-3);
+}
+.settings-links .release-links {
+  margin-top: 0;
+  display: grid;
+  gap: 0;
+  justify-content: stretch;
+}
+.settings-links a,
+.settings-links .license-link {
+  justify-content: flex-start;
+  color: var(--color-accent);
+  font-size: var(--text-lg);
+  text-align: left;
+}
+.toggle-row small {
+  display: block;
+  margin-top: var(--space-half);
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+}
+
+/* ── Scene source sheet ──────────────────────────────── */
+.scene-source-sheet .eyebrow {
+  margin: var(--space-4) 0 var(--space-2);
+}
+.scene-source-sheet .list-row svg:first-child {
+  color: var(--color-accent);
+  flex: none;
+}
+.settings-card .toggle-row {
+  min-height: var(--hit-min);
+  color: var(--color-text);
+  font-size: var(--text-lg);
+}
+.settings-card .toggle-row + .toggle-row {
+  padding-top: var(--space-3);
+  box-shadow: inset 0 var(--border-hairline) 0 var(--color-separator);
+}
+
+/* ── Gallery hero (no projects yet) ───────────────────── */
+.gallery-lede {
+  margin: calc(-1 * var(--space-3)) 0 var(--space-5);
+  color: var(--color-text-secondary);
+  font-size: var(--text-lg);
+}
+.gallery-hero {
+  padding: var(--space-4) 0 var(--space-8);
+  display: grid;
+  justify-items: center;
+  gap: var(--space-3);
+  text-align: center;
+}
+/* Scene thumbnails fanned like prints on a table; they drift apart as the page scrolls. */
+.gallery-hero__fan {
+  position: relative;
+  width: 100%;
+  height: calc(var(--fab-size) * 3);
+  margin-bottom: var(--space-4);
+}
+.gallery-hero__fan img {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: calc(var(--fab-size) * 2);
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-float);
+  translate: -50% -50%;
+  transform: translate3d(
+      calc(var(--i) * var(--space-9)),
+      calc(var(--i) * var(--i) * var(--space-2)),
+      0
+    )
+    rotate(calc(var(--i) * 6deg));
+  z-index: calc(10 - var(--i) * var(--i));
+  animation: fan-in var(--dur-reveal) var(--ease-reveal) both;
+  animation-delay: calc((var(--i) + 2) * var(--stagger-step) * 2);
+}
+@keyframes fan-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, var(--reveal-distance), 0) rotate(0deg) scale(0.9);
+  }
+}
+@supports (animation-timeline: scroll()) {
+  .gallery-hero__fan {
+    animation: fan-spread linear both;
+    animation-timeline: scroll(nearest block);
+    animation-range: 0 calc(var(--fab-size) * 3);
+  }
+}
+@keyframes fan-spread {
+  to {
+    transform: scale(1.08);
+    opacity: 0.4;
+  }
+}
+.gallery-hero__eyebrow {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+}
+.gallery-hero__title {
+  margin: 0;
+  max-width: 12ch;
+  font-family: var(--font-display);
+  font-size: var(--text-display-m);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-hero);
+  line-height: var(--leading-display);
+  animation: splash-word var(--dur-reveal) var(--ease-reveal) both;
+  animation-delay: var(--dur-fast);
+}
+.gallery-hero__lede {
+  margin: 0;
+  max-width: 32ch;
+  color: var(--color-text-secondary);
+  font-size: var(--text-lg);
+  line-height: var(--leading-normal);
+  animation: splash-word var(--dur-reveal) var(--ease-reveal) both;
+  animation-delay: var(--dur-base);
+}
+.gallery-hero__actions {
+  margin-top: var(--space-3);
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2);
+  animation: splash-word var(--dur-reveal) var(--ease-reveal) both;
+  animation-delay: var(--dur-slow);
+}
+@media (prefers-reduced-motion: reduce) {
+  .gallery-hero__fan {
+    animation: none;
+  }
+}
+:root[data-reduce-motion="true"] .gallery-hero__fan {
+  animation: none;
+}

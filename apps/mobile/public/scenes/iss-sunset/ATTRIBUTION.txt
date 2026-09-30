@@ -1,0 +1,24 @@
+ISS at Sunset
+Creator: tmate
+Creator profile: https://superspl.at/user/tmate
+Source: https://superspl.at/scene/916466f4
+License: Creative Commons Attribution 4.0 International (CC BY 4.0)
+License URL: https://creativecommons.org/licenses/by/4.0/
+
+Credit: ISS at Sunset — tmate · CC BY 4.0
+
+The creator's scene page offered this asset for download under CC BY 4.0 when
+retrieved on 2026-09-28. This attribution applies to the scene asset; Oculo's
+application code is licensed separately. Retain this credit, the source and license
+links, and this indication of changes when redistributing the scene or images
+derived from it.
+
+File: iss-sunset.sog
+Size: 11,634,830 bytes
+SHA-256: 94f5a8817fa9f939da12249a3c1bc53b29a97c161ea09bba035ab38bb8451807
+Format: SOG; 800,000 Gaussian splats
+
+Changes: Reduced from 9,999,999 to 800,000 Gaussian splats, spherical harmonics reduced to degree 1, NaN splats removed, and re-encoded as SOG for mobile.
+
+Start camera: the creator's published SuperSplat viewer camera
+(position [-2.978389263153076,28.438758850097656,-93.73444366455078], target [-2.9524097757412484,27.769821074861753,-91.84980602174119]).

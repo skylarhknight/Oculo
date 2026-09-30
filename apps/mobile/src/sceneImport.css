@@ -1,0 +1,71 @@
+/* Scene import dialog, rendered in the shared bottom sheet. Token-only. */
+.modal-backdrop > .modal.import-scene-modal {
+  padding: 0 var(--gutter) calc(var(--space-6) + var(--safe-bottom));
+}
+.import-scene-modal .modal-header {
+  padding-inline: 0;
+}
+.import-scene-modal > p {
+  color: var(--color-text-secondary);
+  font-size: var(--text-md);
+  line-height: var(--leading-normal);
+}
+.import-scene-form {
+  display: grid;
+  gap: var(--space-4);
+  min-width: 0;
+}
+.import-scene-form label {
+  display: grid;
+  gap: var(--space-2);
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+}
+.import-scene-form input,
+.import-scene-form select {
+  width: 100%;
+  min-width: 0;
+  min-height: var(--hit-min);
+  padding: var(--space-3) var(--space-4);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--color-cell);
+  color: var(--color-text);
+  font: inherit;
+  font-size: var(--text-lg);
+}
+.import-scene-form input[type="file"] {
+  font-size: var(--text-md);
+}
+.import-scene-form input[type="file"]::file-selector-button {
+  margin-right: var(--space-3);
+  padding: var(--space-1) var(--space-3);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--color-tint-soft);
+  color: var(--color-accent);
+  font: inherit;
+  font-weight: var(--weight-semibold);
+}
+.import-scene-hint {
+  margin: calc(var(--space-2) * -1) 0 0;
+  padding-inline: var(--space-4);
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+}
+.import-scene-form progress {
+  width: 100%;
+  accent-color: var(--color-accent);
+}
+.import-scene-error {
+  color: var(--color-danger);
+}
+.import-scene-actions {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+.import-scene-actions button {
+  flex: 1;
+  margin: 0;
+}

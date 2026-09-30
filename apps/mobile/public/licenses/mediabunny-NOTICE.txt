@@ -1,0 +1,22 @@
+Mediabunny 1.56.1
+Copyright © 2026-present Vanilagy and contributors.
+
+Oculo uses the unmodified Mediabunny library to encode and package MP4
+camera previews. Mediabunny is licensed under the Mozilla Public License 2.0.
+The complete license is provided alongside this notice in:
+mediabunny-MPL-2.0.txt
+
+The corresponding Source Code Form for the exact library version used here
+is available without charge at:
+https://github.com/Vanilagy/mediabunny/tree/v1.56.1
+
+Download the source archive:
+https://github.com/Vanilagy/mediabunny/archive/refs/tags/v1.56.1.tar.gz
+
+Original npm package (includes src/ and LICENSE):
+https://registry.npmjs.org/mediabunny/-/mediabunny-1.56.1.tgz
+
+Project website: https://mediabunny.dev/
+
+Oculo has made no changes to Mediabunny's source files. Bundling and
+minification for the application do not change the license of this library.

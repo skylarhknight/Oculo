@@ -1,0 +1,24 @@
+Perseverance Rover
+Creator: tmate
+Creator profile: https://superspl.at/user/tmate
+Source: https://superspl.at/scene/8d5c3046
+License: Creative Commons Attribution 4.0 International (CC BY 4.0)
+License URL: https://creativecommons.org/licenses/by/4.0/
+
+Credit: Perseverance Rover — tmate · CC BY 4.0
+
+The creator's scene page offered this asset for download under CC BY 4.0 when
+retrieved on 2026-09-28. This attribution applies to the scene asset; Oculo's
+application code is licensed separately. Retain this credit, the source and license
+links, and this indication of changes when redistributing the scene or images
+derived from it.
+
+File: perseverance.sog
+Size: 11,539,532 bytes
+SHA-256: df0d25eab420c73e24f9de4f44ca446fcd4df7c672180a13180192cc2738f768
+Format: SOG; 800,000 Gaussian splats
+
+Changes: Reduced from 6,008,726 to 800,000 Gaussian splats, spherical harmonics reduced to degree 1, NaN splats removed, and re-encoded as SOG for mobile.
+
+Start camera: the creator's published SuperSplat viewer camera
+(position [1.6580910682678223,1.9669520854949951,-3.546074628829956], target [0.7080528824378162,1.4970719538483959,-1.8500085807189706]).

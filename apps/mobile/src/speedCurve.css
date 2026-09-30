@@ -1,0 +1,224 @@
+/* Speed curve editor: an inset grouped card with a spring-feel graph. Token-only. */
+.speed-curve-editor {
+  min-width: 0;
+  scroll-margin-top: var(--space-10);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--color-fill-4);
+  color: var(--color-text);
+}
+
+.speed-curve-heading,
+.speed-curve-graph-label,
+.speed-curve-point-toolbar,
+.speed-curve-intensity > span {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+.speed-curve-heading {
+  flex-wrap: wrap;
+}
+.speed-curve-heading h3 {
+  flex-grow: 1;
+  margin: 0;
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+}
+
+.speed-curve-editor button {
+  min-height: var(--hit-min);
+  padding: 0 var(--space-3);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--color-fill-3);
+  color: var(--color-accent);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  cursor: pointer;
+  transition:
+    transform var(--dur-base) var(--spring-snappy),
+    background-color var(--dur-fast) var(--ease-standard);
+}
+.speed-curve-editor button:active:not(:disabled) {
+  transform: scale(var(--press-scale));
+}
+.speed-curve-editor button[aria-pressed="true"] {
+  background: var(--color-accent);
+  color: var(--color-text-on-accent);
+}
+.speed-curve-editor button:disabled,
+.speed-curve-editor input:disabled,
+.speed-curve-editor select:disabled {
+  cursor: default;
+  opacity: var(--disabled-opacity);
+}
+.speed-curve-editor .speed-curve-reset {
+  background: transparent;
+}
+
+.speed-curve-description,
+.speed-curve-help {
+  margin: var(--space-1) 0 var(--space-3);
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+}
+
+.speed-curve-segment {
+  display: grid;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+}
+
+.speed-curve-editor select,
+.speed-curve-editor input[type="number"] {
+  width: 100%;
+  min-width: 0;
+  min-height: var(--hit-min);
+  padding: 0 var(--space-3);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--color-fill-3);
+  color: var(--color-text);
+  font-size: var(--text-lg);
+  font-variant-numeric: tabular-nums;
+}
+
+.speed-curve-presets {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(calc(var(--space-10) + var(--space-3)), 1fr));
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+.speed-curve-presets button {
+  padding: 0 var(--space-1);
+}
+
+.speed-curve-graph-label {
+  margin-bottom: var(--space-1);
+  color: var(--color-text-secondary);
+  font-size: var(--text-xs);
+}
+
+.speed-curve-graph {
+  display: block;
+  width: 100%;
+  height: var(--curve-graph-h);
+  overflow: visible;
+  touch-action: none;
+  user-select: none;
+}
+
+.speed-curve-grid line {
+  stroke: var(--color-separator);
+  stroke-width: var(--border-hairline);
+  vector-effect: non-scaling-stroke;
+}
+.speed-curve-grid text {
+  fill: var(--color-text-tertiary);
+  font-size: var(--text-2xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.speed-curve-line {
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-width: var(--border-thick);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.speed-curve-cursor {
+  stroke: var(--color-highlight);
+  stroke-width: var(--border-focus);
+  vector-effect: non-scaling-stroke;
+}
+
+.speed-curve-point-dot {
+  fill: var(--color-knob);
+  stroke: var(--color-accent);
+  stroke-width: var(--border-focus);
+  pointer-events: none;
+  vector-effect: non-scaling-stroke;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform var(--dur-base) var(--spring-bouncy);
+}
+.speed-curve-point.is-selected .speed-curve-point-dot {
+  fill: var(--color-accent);
+  transform: scale(1.3);
+}
+
+.speed-curve-point-handle {
+  fill: transparent;
+  stroke: transparent;
+  stroke-width: var(--border-hairline);
+  cursor: grab;
+  outline: none;
+  touch-action: none;
+  vector-effect: non-scaling-stroke;
+}
+.speed-curve-point-handle:active {
+  cursor: grabbing;
+}
+.speed-curve-point-handle:focus-visible {
+  stroke: var(--color-focus-ring);
+}
+.speed-curve-editor[aria-disabled="true"] .speed-curve-point-handle {
+  cursor: default;
+}
+
+.speed-curve-point-toolbar {
+  flex-wrap: wrap;
+  padding-top: var(--space-3);
+  box-shadow: inset 0 var(--border-hairline) 0 var(--color-separator);
+  font-size: var(--text-sm);
+}
+.speed-curve-point-toolbar > div {
+  display: flex;
+  gap: var(--space-2);
+}
+.speed-curve-dim {
+  color: var(--color-text-secondary);
+}
+
+.speed-curve-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+  margin: var(--space-3) 0 var(--space-4);
+}
+.speed-curve-fields label,
+.speed-curve-intensity {
+  display: grid;
+  gap: var(--space-2);
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+}
+.speed-curve-intensity output {
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+}
+.speed-curve-intensity input {
+  width: 100%;
+  min-height: var(--hit-min);
+  margin: 0;
+  accent-color: var(--color-accent);
+}
+.speed-curve-intensity-scale {
+  margin-top: calc(var(--space-1) * -1);
+  color: var(--color-text-tertiary);
+  font-size: var(--text-xs);
+}
+.speed-curve-error {
+  margin: var(--space-3) 0 0;
+  color: var(--color-warning);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  animation: alert-in var(--dur-base) var(--spring-smooth) both;
+}

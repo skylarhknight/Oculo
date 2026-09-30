@@ -1,0 +1,28 @@
+{
+  "name": "@oculo/account-functions",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": "22"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "gcp-build": "",
+    "typecheck": "tsc -p tsconfig.json --pretty false",
+    "test": "vitest run --root ../.. apps/account-functions/test"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.1",
+    "typescript": "6.0.3",
+    "vitest": "4.1.10"
+  },
+  "dependencies": {
+    "firebase-admin": "14.3.0",
+    "firebase-functions": "7.3.2"
+  }
+}

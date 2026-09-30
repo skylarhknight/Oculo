@@ -1,0 +1,28 @@
+rules_version = '2';
+
+// Oculo Firestore rules.
+// Every document is user-scoped: a signed-in user may only touch their own
+// subtree, and project documents must carry the supported schema version.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{uid}/projects/{projectId} {
+      allow read, delete: if isOwner(uid);
+      allow create, update: if isOwner(uid) && isValidProject(projectId);
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isOwner(uid) {
+      return request.auth != null && request.auth.uid == uid;
+    }
+
+    function isValidProject(projectId) {
+      return request.resource.data.schemaVersion in [1, 2]
+        && request.resource.data.id == projectId
+        && request.resource.data.name is string
+        && request.resource.data.updatedAt is number;
+    }
+  }
+}

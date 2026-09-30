@@ -1,0 +1,24 @@
+Košická Interior
+Creator: vikso
+Creator profile: https://superspl.at/user/vikso
+Source: https://superspl.at/scene/030c2254
+License: Creative Commons Attribution 4.0 International (CC BY 4.0)
+License URL: https://creativecommons.org/licenses/by/4.0/
+
+Credit: Košická Interior — vikso · CC BY 4.0
+
+The creator's scene page offered this asset for download under CC BY 4.0 when
+retrieved on 2026-09-28. This attribution applies to the scene asset; Oculo's
+application code is licensed separately. Retain this credit, the source and license
+links, and this indication of changes when redistributing the scene or images
+derived from it.
+
+File: kosicka-interior.sog
+Size: 11,836,662 bytes
+SHA-256: f308686e74febbc41c61d51199af2d89700fc42035565990060ab6561b9ff4db
+Format: SOG; 800,000 Gaussian splats
+
+Changes: Reduced from 1,221,534 to 800,000 Gaussian splats (starting from streamed LOD level 1), spherical harmonics reduced to degree 1, NaN splats removed, and re-encoded as SOG for mobile.
+
+Start camera: the creator's published SuperSplat viewer camera
+(position [-8.962226867675781,2.361298084259033,2.951056480407715], target [-7.413481295999381,2.2760225737372024,-0.14638035212512968]).

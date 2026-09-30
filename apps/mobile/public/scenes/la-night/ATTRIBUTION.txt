@@ -1,0 +1,24 @@
+LA Night
+Creator: matousekfoto
+Creator profile: https://superspl.at/user/matousekfoto
+Source: https://superspl.at/scene/d1ea0b35
+License: Creative Commons Attribution 4.0 International (CC BY 4.0)
+License URL: https://creativecommons.org/licenses/by/4.0/
+
+Credit: LA Night — matousekfoto · CC BY 4.0
+
+The creator's scene page offered this asset for download under CC BY 4.0 when
+retrieved on 2026-09-28. This attribution applies to the scene asset; Oculo's
+application code is licensed separately. Retain this credit, the source and license
+links, and this indication of changes when redistributing the scene or images
+derived from it.
+
+File: la-night.sog
+Size: 10,784,806 bytes
+SHA-256: 1855bafab769a80533c0b2e1a2dc3f8bd52b345488c6f04e04e7f96f9470f041
+Format: SOG; 700,000 Gaussian splats
+
+Changes: Reduced from 2,994,000 to 700,000 Gaussian splats, spherical harmonics reduced to degree 1, NaN splats removed, and re-encoded as SOG for mobile.
+
+Start camera: the creator's published SuperSplat viewer camera
+(position [3.050088882446289,1.9219162464141846,-2.449230909347534], target [0.08517506656344276,0.5947246161163686,0.22038956559001122]).

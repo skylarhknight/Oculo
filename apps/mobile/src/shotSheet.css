@@ -1,0 +1,473 @@
+/*
+ * Shot sheet workspace: review, order, and annotate shots before export. The
+ * on-screen editor follows the app's grouped style; the exported PDF/PNG has its
+ * own fixed print layout (services/shotSheet). Token-only.
+ */
+.sheet-workspace {
+  position: fixed;
+  top: 0;
+  inset-inline: 0;
+  height: 100dvh;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  overflow: hidden;
+  background: var(--color-bg-grouped);
+  color: var(--color-text);
+}
+.sheet-header {
+  min-height: calc(var(--app-bar-h) + var(--space-4) + var(--safe-top));
+  padding: calc(var(--space-2) + var(--safe-top)) calc(var(--space-2) + var(--safe-right))
+    var(--space-2) calc(var(--space-2) + var(--safe-left));
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: var(--material-chrome);
+  -webkit-backdrop-filter: var(--material-blur);
+  backdrop-filter: var(--material-blur);
+  box-shadow: 0 var(--border-hairline) 0 var(--color-separator);
+}
+.sheet-header > div {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+}
+.sheet-header h1 {
+  margin: 0;
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+}
+.sheet-header p {
+  margin: var(--space-half) 0 0;
+  color: var(--color-text-secondary);
+  font-size: var(--text-xs);
+  overflow-wrap: anywhere;
+}
+.sheet-header h1:focus {
+  outline: none;
+}
+.sheet-header .icon-button {
+  color: var(--color-accent);
+}
+.sheet-header .secondary-button {
+  min-height: calc(var(--hit-min) - var(--space-1));
+  padding-inline: var(--space-3);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-md);
+}
+.sheet-body {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--space-5) calc(var(--gutter) + var(--safe-right)) var(--space-7)
+    calc(var(--gutter) + var(--safe-left));
+}
+.sheet-body > * {
+  max-width: var(--content-max-w);
+  margin-inline: auto;
+}
+.sheet-intro {
+  margin-bottom: var(--space-6);
+}
+.sheet-intro h2 {
+  margin: var(--space-2) 0;
+  font-family: var(--font-display);
+  font-size: var(--text-display-s);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-hero);
+  line-height: var(--leading-display);
+  animation: stagger-rise var(--dur-reveal) var(--ease-reveal) both;
+}
+.sheet-intro p {
+  animation: stagger-rise var(--dur-reveal) var(--ease-reveal) both;
+  animation-delay: var(--dur-fast);
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: var(--text-md);
+  line-height: var(--leading-normal);
+}
+.sheet-workspace button:disabled {
+  opacity: var(--disabled-opacity);
+  cursor: not-allowed;
+}
+.sheet-workspace input[type="checkbox"] {
+  width: var(--icon-lg);
+  height: var(--icon-lg);
+  flex-shrink: 0;
+  accent-color: var(--color-accent);
+}
+.sheet-workspace label {
+  color: var(--color-text);
+  font-size: var(--text-md);
+}
+.sheet-project-title {
+  margin-bottom: var(--space-5);
+}
+.sheet-project-title input {
+  font-weight: var(--weight-semibold);
+}
+.sheet-selection-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+  padding-inline: var(--space-4);
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+}
+.sheet-selection-heading > p {
+  margin: 0;
+}
+.sheet-selection-heading > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+.sheet-selection-heading button {
+  min-height: var(--hit-min);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-accent);
+  font-size: var(--text-md);
+  cursor: pointer;
+}
+.sheet-shot-list {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-4);
+  list-style: none;
+}
+.sheet-shot {
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--color-cell);
+  box-shadow: var(--shadow-card);
+  animation: stagger-rise var(--dur-slow) var(--spring-smooth) both;
+  transition: opacity var(--dur-base) var(--ease-standard);
+}
+.sheet-shot.excluded {
+  opacity: var(--dim-opacity);
+}
+.sheet-shot-number {
+  margin: 0 0 var(--space-3);
+  color: var(--color-text-secondary);
+  font: var(--weight-semibold) var(--text-sm) var(--font-rounded);
+  font-variant-numeric: tabular-nums;
+}
+.sheet-file-progress {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin: var(--space-3) 0;
+}
+.sheet-file-progress p {
+  margin: 0;
+  font-size: var(--text-md);
+}
+.sheet-shot-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+.sheet-shot-top label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+  font-weight: var(--weight-semibold);
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+.sheet-order-buttons {
+  display: flex;
+  gap: var(--space-1);
+  flex-shrink: 0;
+}
+.sheet-order-buttons button,
+.sheet-page-controls button,
+.sheet-preview-zoom button {
+  min-width: var(--hit-min);
+  min-height: var(--hit-min);
+  padding: 0 var(--space-3);
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--color-fill-3);
+  color: var(--color-accent);
+  font-size: var(--text-md);
+  cursor: pointer;
+  transition: transform var(--dur-base) var(--spring-snappy);
+}
+.sheet-order-buttons button:active:not(:disabled),
+.sheet-page-controls button:active:not(:disabled),
+.sheet-preview-zoom button:active:not(:disabled) {
+  transform: scale(var(--press-scale));
+}
+.sheet-shot-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--card-wide-min-w)), 1fr));
+  gap: var(--space-4);
+  align-items: start;
+}
+.sheet-frame {
+  min-width: 0;
+  width: 100%;
+  max-height: calc(var(--curve-graph-expanded-h) - var(--space-2));
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background: var(--color-scene);
+}
+.sheet-frame img {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  object-fit: contain;
+}
+.sheet-frame > div {
+  padding: var(--space-5);
+  display: grid;
+  justify-items: center;
+  gap: var(--space-3);
+  color: var(--color-on-scene-secondary);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  text-align: center;
+}
+.sheet-shot-details {
+  min-width: 0;
+}
+.sheet-shot-details .field-stack {
+  margin-bottom: var(--space-3);
+}
+.sheet-shot-details .field-stack input,
+.sheet-shot-details .field-stack textarea {
+  background: var(--color-fill-4);
+}
+.sheet-shot-details textarea {
+  min-height: calc(var(--space-10) + var(--space-9));
+  resize: vertical;
+}
+.sheet-camera-meta {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: var(--text-xs);
+  line-height: var(--leading-normal);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.sheet-missing {
+  padding-top: var(--space-3);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+.sheet-missing p {
+  margin: 0;
+  color: var(--color-warning);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+}
+.sheet-missing button {
+  white-space: nowrap;
+}
+.sheet-alert,
+.sheet-notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  margin-bottom: var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-cell);
+  font-size: var(--text-md);
+  line-height: var(--leading-normal);
+  animation: alert-in var(--dur-base) var(--spring-smooth) both;
+}
+.sheet-alert {
+  color: var(--color-danger);
+}
+.sheet-notice {
+  color: var(--color-success);
+}
+.sheet-alert p {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.sheet-alert button {
+  flex-shrink: 0;
+  min-width: var(--hit-min);
+  min-height: var(--hit-min);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--color-fill-3);
+  color: inherit;
+  cursor: pointer;
+}
+.sheet-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) calc(var(--gutter) + var(--safe-right))
+    calc(var(--space-3) + var(--safe-bottom)) calc(var(--gutter) + var(--safe-left));
+  background: var(--material-chrome);
+  -webkit-backdrop-filter: var(--material-blur);
+  backdrop-filter: var(--material-blur);
+  box-shadow: 0 calc(var(--border-hairline) * -1) 0 var(--color-separator);
+}
+.sheet-footer:empty {
+  display: none;
+}
+.sheet-footer > button {
+  flex: 1 1 calc(var(--card-min-w) + var(--space-5));
+}
+.sheet-empty,
+.sheet-progress {
+  padding: var(--space-9) var(--space-5);
+  text-align: center;
+}
+.sheet-empty > svg,
+.sheet-progress > svg {
+  color: var(--color-text-tertiary);
+}
+.sheet-empty h2,
+.sheet-progress h2 {
+  margin: var(--space-4) 0 var(--space-2);
+  font-size: var(--text-xl);
+  font-weight: var(--weight-bold);
+}
+.sheet-empty p,
+.sheet-progress p {
+  max-width: var(--dialog-max-w);
+  margin: 0 auto var(--space-5);
+  color: var(--color-text-secondary);
+  font-size: var(--text-md);
+  line-height: var(--leading-normal);
+}
+.sheet-footnote {
+  margin-top: var(--space-5);
+  padding-inline: var(--space-4);
+  color: var(--color-text-secondary);
+  font-size: var(--text-xs);
+  line-height: var(--leading-normal);
+  overflow-wrap: anywhere;
+}
+.sheet-preview-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+.sheet-preview-heading > div {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-success);
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+}
+.sheet-preview-heading p {
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+}
+.sheet-page-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-5);
+  margin-bottom: var(--space-4);
+}
+.sheet-page-controls output {
+  font-size: var(--text-md);
+  font-variant-numeric: tabular-nums;
+}
+.sheet-preview-zoom {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-2);
+}
+.sheet-preview-zoom button[aria-pressed="true"] {
+  background: var(--color-accent);
+  color: var(--color-text-on-accent);
+}
+.sheet-preview-hint {
+  margin: var(--space-3) 0;
+  color: var(--color-text-secondary);
+  font-size: var(--text-xs);
+  line-height: var(--leading-normal);
+  text-align: center;
+}
+.sheet-page-text {
+  margin: var(--space-3) 0;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background: var(--color-cell);
+}
+.sheet-page-text summary {
+  min-height: var(--hit-min);
+  padding: var(--space-3) var(--space-4);
+  color: var(--color-accent);
+  font-size: var(--text-md);
+  cursor: pointer;
+}
+.sheet-page-text-note {
+  margin: 0 var(--space-4) var(--space-3);
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+}
+.sheet-page-transcript {
+  margin: 0;
+  padding: 0 var(--space-4) var(--space-4);
+  color: var(--color-text);
+  font-size: var(--text-callout);
+  line-height: var(--leading-normal);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  unicode-bidi: plaintext;
+  user-select: text;
+  -webkit-user-select: text;
+}
+.sheet-page-viewport {
+  width: 100%;
+  height: 65dvh;
+  overflow: auto;
+  overscroll-behavior: contain;
+  touch-action: pan-x pan-y;
+  border-radius: var(--radius-md);
+  background: var(--color-fill-4);
+  box-shadow: var(--shadow-card);
+}
+.sheet-page-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.sheet-page-viewport.enlarged .sheet-page-image {
+  max-width: none;
+  object-fit: fill;
+}
+.reduce-motion *,
+.reduce-motion *::before,
+.reduce-motion *::after {
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
+}

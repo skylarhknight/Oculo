@@ -1,0 +1,24 @@
+Botanical Garden
+Creator: simonbethke
+Creator profile: https://superspl.at/user/simonbethke
+Source: https://superspl.at/scene/e2b36b69
+License: Creative Commons Attribution 4.0 International (CC BY 4.0)
+License URL: https://creativecommons.org/licenses/by/4.0/
+
+Credit: Botanical Garden — simonbethke · CC BY 4.0
+
+The creator's scene page offered this asset for download under CC BY 4.0 when
+retrieved on 2026-09-28. This attribution applies to the scene asset; Oculo's
+application code is licensed separately. Retain this credit, the source and license
+links, and this indication of changes when redistributing the scene or images
+derived from it.
+
+File: botanical-garden.sog
+Size: 11,815,158 bytes
+SHA-256: 7cfb20fd32e61ef03ca6e4b375e057b9c44674ed50b38d22ed073e4468d0fde1
+Format: SOG; 800,000 Gaussian splats
+
+Changes: Reduced from 19,993,839 to 800,000 Gaussian splats, spherical harmonics reduced to degree 1, NaN splats removed, and re-encoded as SOG for mobile.
+
+Start camera: the creator's published SuperSplat viewer camera
+(position [3.3935195957765893,1.2912844317172554,5.708867638751975], target [-0.036866723473883756,-1.8844538370939121,-0.008442893332147428]).

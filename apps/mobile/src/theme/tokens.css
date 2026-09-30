@@ -1,0 +1,479 @@
+/*
+ * Oculo design tokens, modeled on Apple's Human Interface Guidelines: system
+ * colors, semantic labels and fills, materials, Dynamic Type sizes, and spring
+ * motion. Every color, space, radius, type size, and motion value used by screens,
+ * navigation, and shared UI resolves to a token here. A visual redesign changes
+ * values in this file, not selectors elsewhere.
+ *
+ * Layers: primitives (raw palette/scales) -> semantic aliases (what components use).
+ * Components must reference semantic tokens only.
+ *
+ * Appearance follows the Appearance setting (light, dark, or match system), resolved to
+ * data-theme on the root element. Dark values are the default; light values apply to
+ * :root[data-theme="light"] only. An element marked
+ * data-appearance="dark" (the scene workspace, like the Camera app) matches the dark
+ * block itself, so it redeclares the dark palette and every semantic alias and its
+ * subtree stays dark inside a light app.
+ */
+
+/* ── Dark appearance (default, and forced for data-appearance="dark") ── */
+:root,
+[data-appearance="dark"] {
+  color-scheme: dark;
+
+  /* System colors (dark) */
+  --palette-blue: #0a84ff;
+  --palette-blue-pressed: #409cff;
+  --palette-green: #30d158;
+  --palette-red: #ff453a;
+  --palette-orange: #ff9f0a;
+  --palette-yellow: #ffd60a;
+  --palette-indigo: #5e5ce6;
+  --palette-pink: #ff375f;
+  --palette-white: #ffffff;
+  --palette-black: #000000;
+  --palette-gray: #8e8e93;
+  --palette-gray-2: #636366;
+  --palette-gray-3: #48484a;
+  --palette-gray-4: #3a3a3c;
+  --palette-gray-5: #2c2c2e;
+  --palette-gray-6: #1c1c1e;
+  --palette-label: #ffffff;
+  --palette-label-2: rgba(235, 235, 245, 0.6);
+  --palette-label-3: rgba(235, 235, 245, 0.3);
+  --palette-label-4: rgba(235, 235, 245, 0.16);
+  --palette-bg: #000000;
+  --palette-bg-2: #1c1c1e;
+  --palette-bg-3: #2c2c2e;
+  --palette-separator: rgba(84, 84, 88, 0.65);
+  --palette-separator-opaque: #38383a;
+  --palette-fill-1: rgba(120, 120, 128, 0.36);
+  --palette-fill-2: rgba(120, 120, 128, 0.32);
+  --palette-fill-3: rgba(118, 118, 128, 0.24);
+  --palette-fill-4: rgba(118, 118, 128, 0.18);
+  --palette-blue-a15: rgba(10, 132, 255, 0.18);
+  --palette-blue-a40: rgba(10, 132, 255, 0.45);
+  --palette-scrim: rgba(0, 0, 0, 0.48);
+  --palette-shadow: rgba(0, 0, 0, 0.5);
+  --palette-shadow-soft: rgba(0, 0, 0, 0.28);
+  --palette-glass-ultrathin: rgba(28, 28, 30, 0.42);
+  --palette-glass-thin: rgba(37, 37, 40, 0.62);
+  --palette-glass-regular: rgba(30, 30, 32, 0.78);
+  --palette-glass-chrome: rgba(22, 22, 24, 0.86);
+  --palette-glass-edge: rgba(255, 255, 255, 0.1);
+  --palette-scene: #050505;
+
+  /* Semantic color */
+  --color-bg: var(--palette-bg);
+  --color-bg-elevated: var(--palette-bg-2);
+  --color-bg-grouped: var(--palette-bg);
+  --color-cell: var(--palette-bg-2);
+  --color-surface: var(--palette-bg-2);
+  --color-surface-raised: var(--palette-bg-3);
+  --color-surface-pressed: var(--palette-gray-4);
+  --color-surface-overlay: var(--palette-glass-ultrathin);
+  --color-fill-1: var(--palette-fill-1);
+  --color-fill-2: var(--palette-fill-2);
+  --color-fill-3: var(--palette-fill-3);
+  --color-fill-4: var(--palette-fill-4);
+  --color-fill-subtle: var(--palette-fill-4);
+  --color-fill-hover: var(--palette-fill-3);
+  --color-text: var(--palette-label);
+  --color-text-secondary: var(--palette-label-2);
+  --color-text-muted: var(--palette-label-2);
+  --color-text-tertiary: var(--palette-label-3);
+  --color-text-quaternary: var(--palette-label-4);
+  --color-text-on-accent: var(--palette-white);
+  --color-border: var(--palette-separator);
+  --color-border-strong: var(--palette-separator-opaque);
+  --color-separator: var(--palette-separator);
+  --color-accent: var(--palette-blue);
+  --color-accent-hover: var(--palette-blue-pressed);
+  --color-accent-soft: var(--palette-blue-a15);
+  --color-accent-border: var(--palette-blue-a40);
+  --color-tint-soft: var(--palette-blue-a15);
+  --color-success: var(--palette-green);
+  --color-warning: var(--palette-orange);
+  --color-danger: var(--palette-red);
+  --color-highlight: var(--palette-yellow);
+  /* Display headlines: one word in a spectrum, the way apple.com highlights a product name. */
+  --gradient-hero: linear-gradient(
+    100deg,
+    var(--palette-blue) 0%,
+    var(--palette-indigo) 45%,
+    var(--palette-pink) 100%
+  );
+  --color-scrim: var(--palette-scrim);
+  --color-focus-ring: var(--palette-blue);
+  --color-skeleton: var(--palette-fill-3);
+  --color-switch-off: var(--palette-fill-1);
+  --color-knob: var(--palette-white);
+  --color-scene: var(--palette-scene);
+  --color-on-scene: var(--palette-white);
+  --color-on-scene-inverse: var(--palette-black);
+  --color-backdrop: var(--palette-black);
+  --color-on-scene-secondary: var(--palette-label-2);
+  --color-on-scene-tertiary: var(--palette-label-3);
+  --color-scene-guide: var(--palette-label-3);
+  /* Scene overlay (read by WebGL, so these must resolve to plain colors). */
+  --color-overlay-marker: var(--palette-white);
+  --color-overlay-path: var(--palette-orange);
+
+  /* Materials: translucent backgrounds under a saturating blur. */
+  --material-ultrathin: var(--palette-glass-ultrathin);
+  --material-thin: var(--palette-glass-thin);
+  --material-regular: var(--palette-glass-regular);
+  --material-chrome: var(--palette-glass-chrome);
+  --material-edge: var(--palette-glass-edge);
+
+  /* Elevation: in dark, depth comes from lighter surfaces, not shadow. */
+  --shadow-sheet: 0 0 0 var(--border-hairline) var(--palette-glass-edge);
+  --shadow-fab: 0 var(--space-2) var(--space-6) var(--palette-shadow);
+  --shadow-card: none;
+  --shadow-float: 0 var(--space-2) var(--space-7) var(--palette-shadow);
+  --shadow-knob:
+    0 var(--space-1) var(--space-2) var(--palette-shadow-soft),
+    0 0 0 var(--border-hairline) var(--palette-shadow-soft);
+  --shadow-text: 0 var(--border-hairline) var(--space-2) var(--palette-shadow);
+}
+
+/* ── Light appearance ─────────────────────────────── */
+/* data-theme is resolved by theme/appearance.ts from the Appearance setting (or the
+   system when set to match it) before first paint. */
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --palette-blue: #007aff;
+  --palette-blue-pressed: #0062cc;
+  --palette-green: #34c759;
+  --palette-red: #ff3b30;
+  --palette-orange: #ff9500;
+  --palette-yellow: #ffcc00;
+  --palette-indigo: #5856d6;
+  --palette-pink: #ff2d55;
+  --palette-white: #ffffff;
+  --palette-black: #000000;
+  --palette-gray: #8e8e93;
+  --palette-gray-2: #aeaeb2;
+  --palette-gray-3: #c7c7cc;
+  --palette-gray-4: #d1d1d6;
+  --palette-gray-5: #e5e5ea;
+  --palette-gray-6: #f2f2f7;
+  --palette-label: #000000;
+  --palette-label-2: rgba(60, 60, 67, 0.6);
+  --palette-label-3: rgba(60, 60, 67, 0.3);
+  --palette-label-4: rgba(60, 60, 67, 0.18);
+  --palette-bg: #ffffff;
+  --palette-bg-2: #f2f2f7;
+  --palette-bg-3: #ffffff;
+  --palette-separator: rgba(60, 60, 67, 0.29);
+  --palette-separator-opaque: #c6c6c8;
+  --palette-fill-1: rgba(120, 120, 128, 0.2);
+  --palette-fill-2: rgba(120, 120, 128, 0.16);
+  --palette-fill-3: rgba(118, 118, 128, 0.12);
+  --palette-fill-4: rgba(116, 116, 128, 0.08);
+  --palette-blue-a15: rgba(0, 122, 255, 0.12);
+  --palette-blue-a40: rgba(0, 122, 255, 0.4);
+  --palette-scrim: rgba(0, 0, 0, 0.2);
+  --palette-shadow: rgba(0, 0, 0, 0.14);
+  --palette-shadow-soft: rgba(0, 0, 0, 0.08);
+  --palette-glass-ultrathin: rgba(255, 255, 255, 0.5);
+  --palette-glass-thin: rgba(255, 255, 255, 0.68);
+  --palette-glass-regular: rgba(249, 249, 251, 0.8);
+  --palette-glass-chrome: rgba(249, 249, 251, 0.9);
+  --palette-glass-edge: rgba(0, 0, 0, 0.06);
+  /* Scenes render on black in either appearance. */
+  --palette-scene: #050505;
+
+  --color-bg: var(--palette-bg);
+  --color-bg-elevated: var(--palette-bg);
+  --color-bg-grouped: var(--palette-bg-2);
+  --color-cell: var(--palette-bg);
+  --color-surface: var(--palette-bg);
+  --color-surface-raised: var(--palette-bg-2);
+  --color-surface-pressed: var(--palette-gray-5);
+  --color-surface-overlay: var(--palette-glass-thin);
+  --color-switch-off: var(--palette-gray-5);
+  --gradient-hero: linear-gradient(
+    100deg,
+    var(--palette-blue) 0%,
+    var(--palette-indigo) 45%,
+    var(--palette-pink) 100%
+  );
+
+  --shadow-sheet: 0 calc(var(--space-2) * -1) var(--space-7) var(--palette-shadow-soft);
+  --shadow-card:
+    0 var(--border-hairline) var(--space-1) var(--palette-shadow-soft),
+    0 var(--space-2) var(--space-6) var(--palette-shadow-soft);
+  --shadow-float: 0 var(--space-2) var(--space-7) var(--palette-shadow);
+}
+
+/* ── Appearance-independent scales ──────────────────── */
+:root {
+  /* Brand mark: the Oculo app icon's two colors, identical in both appearances. */
+  --color-brand-mark-bg: #09090a;
+  --color-brand-mark: #d9ff72;
+
+  /* Space (4pt scale) */
+  --space-0: 0;
+  --space-px: 1px;
+  --space-half: 2px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 32px;
+  --space-8: 40px;
+  --space-9: 48px;
+  --space-10: 64px;
+  --gutter: var(--space-4);
+
+  /* Radius (continuous-corner feel) */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-sheet: 12px;
+  --radius-screen: 38px;
+  --radius-pill: 999px;
+
+  /* Border */
+  --border-hairline: 1px;
+  --border-focus: 2px;
+  --border-thick: 3px;
+
+  /* Typography: San Francisco via the system stack, iOS Dynamic Type sizes. */
+  --font-sans:
+    -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro", system-ui, "Helvetica Neue",
+    sans-serif;
+  /* Large headlines use the Display optical size, as apple.com does. */
+  --font-display:
+    -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro", system-ui, "Helvetica Neue",
+    sans-serif;
+  --font-rounded: ui-rounded, "SF Pro Rounded", -apple-system, system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, monospace;
+  --text-2xs: 11px; /* caption 2 */
+  --text-xs: 12px; /* caption 1 */
+  --text-sm: 13px; /* footnote */
+  --text-subhead: 15px; /* subheadline */
+  --text-md: 15px; /* subheadline, dense UI body */
+  --text-callout: 16px; /* callout */
+  --text-lg: 17px; /* body / headline */
+  --text-title3: 20px;
+  --text-xl: 22px; /* title 2 */
+  --text-2xl: 28px; /* title 1 */
+  --text-3xl: 34px; /* large title */
+  /* Display sizes for heroes and screen titles. */
+  --text-display-s: 40px;
+  --text-display-m: 48px;
+  --text-display-l: 56px;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+  --leading-tight: 1.12;
+  --leading-snug: 1.28;
+  --leading-normal: 1.42;
+  --tracking-tight: -0.02em;
+  --tracking-display: -0.022em;
+  --tracking-body: -0.01em;
+  --tracking-caps: 0.02em;
+  --tracking-hero: -0.03em;
+  --leading-display: 1.05;
+
+  /* Touch & layout */
+  --viewport-min-w: 320px;
+  --hit-min: 44px;
+  --hit-comfy: 50px;
+  --fab-size: 68px;
+  --fab-ring: 4px;
+  --switch-w: 51px;
+  --switch-h: 31px;
+  --switch-knob: 27px;
+  --switch-knob-stretch: 34px;
+  --slider-track-h: 4px;
+  --slider-knob: 28px;
+  /* Thumb sticks over the scene: ring, knob, and how far the knob can travel. */
+  --stick-size: 96px;
+  --stick-knob: 40px;
+  --stick-travel: calc((var(--stick-size) - var(--stick-knob)) / 2);
+  --icon-sm: 16px;
+  --icon-md: 20px;
+  --icon-lg: 24px;
+  --dot-sm: 8px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --app-bar-h: 44px;
+  --bottom-bar-h: 72px;
+  --tab-bar-h: 56px;
+  /* Scene viewport: the stage panel's rounded edge overlaps its bottom by one sheet radius. */
+  --viewport-bottom-edge: calc(var(--radius-xl) + var(--space-3));
+  /* Scene viewport: top bar plus quick bar, kept clear of the framed shot. */
+  --viewport-top-reserve: calc(
+    var(--safe-top) + var(--space-2) + var(--hit-min) + var(--space-2) + var(--hit-min)
+  );
+  --sheet-handle-w: 36px;
+  --sheet-handle-h: 5px;
+  --sheet-max-h: 90dvh;
+  --content-max-w: 720px;
+  --dialog-max-w: 440px;
+  --card-thumb-ratio: 16 / 10;
+  --card-min-w: 160px;
+  --card-wide-min-w: 280px;
+  --shot-card-min-w: 150px;
+  --load-bar-w: 220px;
+  --curve-graph-h: 200px;
+  --curve-graph-expanded-h: 360px;
+  --blur-overlay: 20px;
+  --blur-scrim: 0px;
+  --material-saturate: 180%;
+  --material-blur: saturate(var(--material-saturate)) blur(var(--blur-overlay));
+  --stage-panel-peek-h: 34dvh;
+  --stage-panel-expanded-h: 62dvh;
+  --map-token-w: 56px;
+  --map-token-h: 70px;
+  --map-dock-pad: 10px;
+  /* Scene playback bar and the small shot actions under it. */
+  --scene-progress-h: 36px;
+  --scene-progress-max-w: 480px;
+  --pill-action-h: 32px;
+  /* Buttons are capsules, as on apple.com. */
+  --radius-button: var(--radius-pill);
+  /* Compose capture bar: the side buttons, and the shutter with its label. */
+  --capture-side: 48px;
+  --capture-h: calc(var(--fab-size) + var(--space-5));
+  /* Shots overview: numbered camera pins over the isometric scene. */
+  --overview-pin: 26px;
+  /* Scene gallery: the live preview over the top half, and its download ring. */
+  --scene-stage-h: 46dvh;
+  --scene-stage-min-h: 260px;
+  --progress-ring: 44px;
+
+  /* Motion. Springs are CSS linear() curves sampled from UIKit-like springs. */
+  --dur-none: 0ms;
+  --dur-instant: 100ms;
+  --dur-fast: 200ms;
+  --dur-base: 300ms;
+  --dur-slow: 450ms;
+  --dur-sheet: 500ms;
+  --dur-ambient: 1600ms;
+  /* Map view: the rise to the overview, the dive back in, and the auto-Go countdown. */
+  --dur-map-enter: 1100ms;
+  --dur-dive: 1250ms;
+  --dur-countdown: 1500ms;
+  --dur-hint: 4000ms;
+  /* Scroll reveals: content rises into place once, as it enters the screen. */
+  --dur-reveal: 700ms;
+  --reveal-distance: var(--space-6);
+  --ease-reveal: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-standard: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ease-emphasized: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --spring-smooth: cubic-bezier(0.32, 0.72, 0, 1);
+  --spring-snappy: cubic-bezier(0.2, 0.9, 0.3, 1);
+  --spring-bouncy: cubic-bezier(0.34, 1.4, 0.64, 1);
+  --stagger-step: 35ms;
+  --stagger-max: 8;
+  --stagger-rise: var(--space-2);
+  --push-offset: 100%;
+  --push-parallax: -30%;
+  --press-scale: 0.96;
+  --press-opacity: 0.7;
+  --sheet-depth-scale: 0.94;
+  --dim-opacity: 0.6;
+  --nav-dim-opacity: 0.8;
+  --disabled-opacity: 0.35;
+
+  /* Layers */
+  --z-base: 0;
+  --z-raised: 10;
+  --z-bar: 20;
+  --z-screen-transition: 30;
+  --z-sheet: 50;
+  --z-toast: 70;
+}
+
+@supports (transition-timing-function: linear(0, 1)) {
+  :root {
+    /* Critically damped: settles without overshoot (iOS default navigation). */
+    --spring-smooth: linear(
+      0,
+      0.009,
+      0.035 2.1%,
+      0.141 4.4%,
+      0.723 12.9%,
+      0.938 16.7%,
+      1.017 20.4%,
+      1.035 23.6%,
+      1.03 27.3%,
+      1.006 36.3%,
+      0.998 45.8%,
+      1
+    );
+    /* Quick response for presses and toggles. */
+    --spring-snappy: linear(
+      0,
+      0.18 4%,
+      0.52 9%,
+      0.8 15%,
+      0.94 21%,
+      1.01 28%,
+      1.02 34%,
+      1.005 48%,
+      1
+    );
+    /* Gentle overshoot for playful confirmations (badges, switches). */
+    --spring-bouncy: linear(
+      0,
+      0.034 1.2%,
+      0.141 2.6%,
+      0.52 6.3%,
+      0.782 9.4%,
+      0.953 12.7%,
+      1.047 16.3%,
+      1.085 19.9%,
+      1.082 23.9%,
+      1.04 30.2%,
+      1.009 37%,
+      0.996 46%,
+      1
+    );
+  }
+}
+
+/* Reduced motion: keep state changes, drop travel. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-instant: 0ms;
+    --dur-fast: 0ms;
+    --dur-base: 0ms;
+    --dur-slow: 0ms;
+    --dur-sheet: 0ms;
+    --dur-ambient: 0ms;
+    --dur-map-enter: 0ms;
+    --dur-dive: 0ms;
+    --dur-reveal: 0ms;
+    --reveal-distance: 0px;
+    --stagger-step: 0ms;
+    --sheet-depth-scale: 1;
+  }
+}
+:root[data-reduce-motion="true"] {
+  --dur-instant: 0ms;
+  --dur-fast: 0ms;
+  --dur-base: 0ms;
+  --dur-slow: 0ms;
+  --dur-sheet: 0ms;
+  --dur-ambient: 0ms;
+  --dur-map-enter: 0ms;
+  --dur-dive: 0ms;
+  --dur-reveal: 0ms;
+  --reveal-distance: 0px;
+  --stagger-step: 0ms;
+  --sheet-depth-scale: 1;
+}

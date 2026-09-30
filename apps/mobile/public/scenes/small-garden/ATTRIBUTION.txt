@@ -1,0 +1,42 @@
+Small Garden
+Creator: scbenoit (SteveB)
+Creator profile: https://superspl.at/user/scbenoit
+Source: https://superspl.at/scene/108dd868
+License: Creative Commons Attribution 4.0 International (CC BY 4.0)
+License URL: https://creativecommons.org/licenses/by/4.0/
+
+Credit: Small Garden — scbenoit · CC BY 4.0
+
+The creator's scene page explicitly offered this asset for download under
+CC BY 4.0 when retrieved on 2026-09-10. This attribution applies to the scene
+asset; Oculo's application code is licensed separately. Retain this credit,
+the source and license links, and an indication of changes when redistributing
+the scene or images derived from it.
+
+Bundled asset: small-garden.sog
+Size: 13,081,550 bytes
+SHA-256: 68ef9089854aeb84ace37ce51c2ded9404151db86f2e47d8d64ed5f25ce95cb6
+Format: SOG version 2; 689,694 Gaussian splats; spherical harmonics degree 3
+
+Changes: The publicly served meta.json and seven referenced WebP component
+files were packaged into a standard SOG ZIP archive. Every component's bytes
+are unchanged. No geometry, color, compression, or coordinate conversion was
+performed. The viewer transform described below is applied at runtime only.
+
+Component source directory:
+https://d28zzqy0iyovbz.cloudfront.net/108dd868/v1/
+Files: meta.json, means_l.webp, means_u.webp, scales.webp, quats.webp,
+       sh0.webp, shN_centroids.webp, shN_labels.webp
+
+Camera provenance:
+https://superspl.at/s?id=108dd868
+Published position: [2.821625232696533, 8.570806503295898, 2.578657865524292]
+Published target: [-0.22083005569937164, 7.304763339377348, -0.6612279885980237]
+Published FOV: 75 degrees (SuperSplat uses the longer viewport axis).
+Oculo preserves this pose and uses its own editable cinematic lens settings.
+Camera quaternion: [-0.12859633970447537, 0.3645865573144021,
+                    0.050914892225768796, 0.9208405385243863]
+The quaternion is computed with a Y-up Three.js camera looking at the target.
+Splat object quaternion: [0, 0, 1, 0] (180 degrees around Z), matching the
+official SuperSplat viewer's loadGsplat implementation:
+https://github.com/playcanvas/supersplat-viewer/blob/main/src/index.ts

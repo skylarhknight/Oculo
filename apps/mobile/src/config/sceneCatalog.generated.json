@@ -1,0 +1,263 @@
+[
+  {
+    "id": "small-garden",
+    "superSplatId": "108dd868",
+    "title": "Small Garden",
+    "author": "scbenoit",
+    "bundled": true,
+    "fileName": "small-garden.sog",
+    "byteSize": 13081550,
+    "sha256": "68ef9089854aeb84ace37ce51c2ded9404151db86f2e47d8d64ed5f25ce95cb6",
+    "splatCount": 689694,
+    "camera": {
+      "position": [2.821625232696533, 8.570806503295898, 2.578657865524292],
+      "target": [-0.22083005569937164, 7.304763339377348, -0.6612279885980237],
+      "fov": 75,
+      "quaternion": [
+        -0.12859633970447537, 0.3645865573144021, 0.05091489222576879, 0.9208405385243863
+      ]
+    },
+    "source": null,
+    "retrieved": "2026-09-28"
+  },
+  {
+    "id": "la-night",
+    "superSplatId": "d1ea0b35",
+    "title": "LA Night",
+    "author": "matousekfoto",
+    "bundled": true,
+    "fileName": "la-night.sog",
+    "byteSize": 10784806,
+    "sha256": "1855bafab769a80533c0b2e1a2dc3f8bd52b345488c6f04e04e7f96f9470f041",
+    "splatCount": 700000,
+    "camera": {
+      "position": [3.050088882446289, 1.9219162464141846, -2.449230909347534],
+      "target": [0.08517506656344276, 0.5947246161163686, 0.22038956559001122],
+      "fov": 65,
+      "quaternion": [
+        -0.06502953798771478, 0.9017938536100936, 0.1460587367900416, 0.4015044833964607
+      ]
+    },
+    "source": {
+      "count": 2994000,
+      "streamedLevel": null
+    },
+    "retrieved": "2026-09-28"
+  },
+  {
+    "id": "pantheon",
+    "superSplatId": "dac6e508",
+    "title": "The Pantheon Interior",
+    "author": "artfletch",
+    "bundled": true,
+    "fileName": "pantheon.sog",
+    "byteSize": 10577976,
+    "sha256": "bb8c454d78197ae9077215b9e1386af5d3cf8d922c3f983beb33817a9b846185",
+    "splatCount": 700000,
+    "camera": {
+      "position": [7.843629837036133, 2.531981945037842, -5.571453094482422],
+      "target": [-6.962605386437639, 12.139213363523982, 2.1690596522468075],
+      "fov": 100,
+      "quaternion": [
+        0.13363854451120313, 0.8264113100619507, -0.22066346521714889, 0.5004924786058005
+      ]
+    },
+    "source": {
+      "count": 3999998,
+      "streamedLevel": null
+    },
+    "retrieved": "2026-09-28"
+  },
+  {
+    "id": "moon",
+    "superSplatId": "2ac8f423",
+    "title": "The Moon",
+    "author": "nicolasdiolez",
+    "bundled": false,
+    "fileName": "moon.sog",
+    "byteSize": 11256251,
+    "sha256": "ce4fc620246eb3a038d3ab080273f87528ce1a09f03c62a2eb3ec7a30221c444",
+    "splatCount": 800000,
+    "camera": {
+      "position": [47.5604362487793, 18.697174072265625, 23.704959869384766],
+      "target": [-4.506967710359506, -6.632227143198007, -3.341890935334991],
+      "fov": 77,
+      "quaternion": [
+        -0.17295414736180617, 0.5084057215272453, 0.1050544337961357, 0.8370030174189848
+      ]
+    },
+    "source": {
+      "count": 4929011,
+      "streamedLevel": null
+    },
+    "retrieved": "2026-09-28"
+  },
+  {
+    "id": "kosicka-interior",
+    "superSplatId": "030c2254",
+    "title": "Košická Interior",
+    "author": "vikso",
+    "bundled": false,
+    "fileName": "kosicka-interior.sog",
+    "byteSize": 11836662,
+    "sha256": "f308686e74febbc41c61d51199af2d89700fc42035565990060ab6561b9ff4db",
+    "splatCount": 800000,
+    "camera": {
+      "position": [-8.962226867675781, 2.361298084259033, 2.951056480407715],
+      "target": [-7.413481295999381, 2.2760225737372024, -0.14638035212512968],
+      "fov": 85,
+      "quaternion": [
+        -0.01198009389352921, -0.22973892641568933, -0.002828160888910528, 0.9731744471294215
+      ]
+    },
+    "source": {
+      "count": 1221534,
+      "streamedLevel": 1
+    },
+    "retrieved": "2026-09-28"
+  },
+  {
+    "id": "perseverance",
+    "superSplatId": "8d5c3046",
+    "title": "Perseverance Rover",
+    "author": "tmate",
+    "bundled": false,
+    "fileName": "perseverance.sog",
+    "byteSize": 11539532,
+    "sha256": "df0d25eab420c73e24f9de4f44ca446fcd4df7c672180a13180192cc2738f768",
+    "splatCount": 800000,
+    "camera": {
+      "position": [1.6580910682678223, 1.9669520854949951, -3.546074628829956],
+      "target": [0.7080528824378162, 1.4970719538483959, -1.8500085807189706],
+      "fov": 77,
+      "quaternion": [
+        -0.029874969941444143, 0.9607934230582321, 0.11446640138456123, 0.2507606973453203
+      ]
+    },
+    "source": {
+      "count": 6008726,
+      "streamedLevel": null
+    },
+    "retrieved": "2026-09-28"
+  },
+  {
+    "id": "iss-sunset",
+    "superSplatId": "916466f4",
+    "title": "ISS at Sunset",
+    "author": "tmate",
+    "bundled": false,
+    "fileName": "iss-sunset.sog",
+    "byteSize": 11634830,
+    "sha256": "94f5a8817fa9f939da12249a3c1bc53b29a97c161ea09bba035ab38bb8451807",
+    "splatCount": 800000,
+    "camera": {
+      "position": [-2.978389263153076, 28.438758850097656, -93.73444366455078],
+      "target": [-2.9524097757412484, 27.769821074861753, -91.84980602174119],
+      "fov": 80,
+      "quaternion": [
+        0.0011695310447084283, 0.9854731616450972, 0.16969133383030086, -0.006791987724155101
+      ]
+    },
+    "source": {
+      "count": 9999999,
+      "streamedLevel": null
+    },
+    "retrieved": "2026-09-28"
+  },
+  {
+    "id": "iss",
+    "superSplatId": "cc026f6a",
+    "title": "International Space Station",
+    "author": "tmate",
+    "bundled": false,
+    "fileName": "iss.sog",
+    "byteSize": 11788834,
+    "sha256": "7628c729ced60d8f71b49d9b89b75c72b2bc3530675ffc385869fe19d9b76998",
+    "splatCount": 800000,
+    "camera": {
+      "position": [-1.0384409427642822, 46.72137451171875, -61.590667724609375],
+      "target": [-1.0385685281633152, 45.52948976476853, -59.984614348077756],
+      "fov": 78,
+      "quaternion": [
+        -0.000012465202381813461, 0.9494806521836889, 0.3138255718566375, 0.000037713524799988646
+      ]
+    },
+    "source": {
+      "count": 9999999,
+      "streamedLevel": null
+    },
+    "retrieved": "2026-09-28"
+  },
+  {
+    "id": "trieste-tugboats",
+    "superSplatId": "45877bc9",
+    "title": "Tugboats, Trieste",
+    "author": "tosolini",
+    "bundled": false,
+    "fileName": "trieste-tugboats.sog",
+    "byteSize": 9851767,
+    "sha256": "d894069df0a5582a745262a5fef6470bf716f7ef5e1d59ee755da406e960e078",
+    "splatCount": 800000,
+    "camera": {
+      "position": [4.367990970611572, -0.6104521155357361, 4.794667720794678],
+      "target": [-3.331991620020257, 0.16780781270441625, -11.121878544263632],
+      "fov": 75,
+      "quaternion": [
+        0.021436345124031166, 0.2233356447628253, -0.004912808624596939, 0.9744934772472902
+      ]
+    },
+    "source": {
+      "count": 14898311,
+      "streamedLevel": null
+    },
+    "retrieved": "2026-09-28"
+  },
+  {
+    "id": "sainte-anne",
+    "superSplatId": "7a1bb85b",
+    "title": "Sainte-Anne-de-Beaupré",
+    "author": "jeastaman",
+    "bundled": false,
+    "fileName": "sainte-anne.sog",
+    "byteSize": 11940868,
+    "sha256": "53c551ceb8b386ae882288039f37915b2a731994a902d12ec0ff5a9f5231298a",
+    "splatCount": 800000,
+    "camera": {
+      "position": [6.942787170410156, 4.778029918670654, 4.034595489501953],
+      "target": [4.4691605825676906, 4.026124057085581, 1.7289916807058794],
+      "fov": 75,
+      "quaternion": [
+        -0.10012036492827159, 0.39647278021184307, 0.04354761090970514, 0.9115310486548324
+      ]
+    },
+    "source": {
+      "count": 1249936,
+      "streamedLevel": 2
+    },
+    "retrieved": "2026-09-28"
+  },
+  {
+    "id": "botanical-garden",
+    "superSplatId": "e2b36b69",
+    "title": "Botanical Garden",
+    "author": "simonbethke",
+    "bundled": false,
+    "fileName": "botanical-garden.sog",
+    "byteSize": 11815158,
+    "sha256": "7cfb20fd32e61ef03ca6e4b375e057b9c44674ed50b38d22ed073e4468d0fde1",
+    "splatCount": 800000,
+    "camera": {
+      "position": [3.3935195957765893, 1.2912844317172554, 5.708867638751975],
+      "target": [-0.036866723473883756, -1.8844538370939121, -0.008442893332147428],
+      "fov": 60,
+      "quaternion": [
+        -0.2124319074616948, 0.26036774808086754, 0.058840232010298935, 0.9400101848110253
+      ]
+    },
+    "source": {
+      "count": 19993839,
+      "streamedLevel": null
+    },
+    "retrieved": "2026-09-28"
+  }
+]

@@ -1,0 +1,12 @@
+packages:
+  - apps/*
+  - packages/*
+
+allowBuilds:
+  '@firebase/util': true
+  esbuild: true
+  protobufjs: true
+  webgpu: false
+
+# Capacitor resolves native plugin Gradle paths through node_modules/.pnpm.
+enableGlobalVirtualStore: false

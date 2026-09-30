@@ -1,0 +1,99 @@
+{
+  "$comment": "Scene gallery sources. Run `pnpm scenes:build` to fetch, thin, and re-encode them. Every entry must be CC BY 4.0 (or more permissive) and offered for download by its creator.",
+  "sourceBase": "https://d28zzqy0iyovbz.cloudfront.net",
+  "thumbnailBase": "https://s3-eu-west-1.amazonaws.com/images.playcanvas.com/splat",
+  "license": {
+    "name": "CC BY 4.0",
+    "url": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  "scenes": [
+    {
+      "id": "small-garden",
+      "superSplatId": "108dd868",
+      "title": "Small Garden",
+      "author": "scbenoit",
+      "bundled": true,
+      "prebuilt": true
+    },
+    {
+      "id": "la-night",
+      "superSplatId": "d1ea0b35",
+      "title": "LA Night",
+      "author": "matousekfoto",
+      "bundled": true,
+      "splatBudget": 700000
+    },
+    {
+      "id": "pantheon",
+      "superSplatId": "dac6e508",
+      "title": "The Pantheon Interior",
+      "author": "artfletch",
+      "bundled": true,
+      "splatBudget": 700000
+    },
+    {
+      "id": "moon",
+      "superSplatId": "2ac8f423",
+      "title": "The Moon",
+      "author": "nicolasdiolez",
+      "bundled": false,
+      "splatBudget": 800000
+    },
+    {
+      "id": "kosicka-interior",
+      "superSplatId": "030c2254",
+      "title": "Košická Interior",
+      "author": "vikso",
+      "bundled": false,
+      "splatBudget": 800000
+    },
+    {
+      "id": "perseverance",
+      "superSplatId": "8d5c3046",
+      "title": "Perseverance Rover",
+      "author": "tmate",
+      "bundled": false,
+      "splatBudget": 800000
+    },
+    {
+      "id": "iss-sunset",
+      "superSplatId": "916466f4",
+      "title": "ISS at Sunset",
+      "author": "tmate",
+      "bundled": false,
+      "splatBudget": 800000
+    },
+    {
+      "id": "iss",
+      "superSplatId": "cc026f6a",
+      "title": "International Space Station",
+      "author": "tmate",
+      "bundled": false,
+      "splatBudget": 800000
+    },
+    {
+      "id": "trieste-tugboats",
+      "superSplatId": "45877bc9",
+      "title": "Tugboats, Trieste",
+      "author": "tosolini",
+      "bundled": false,
+      "splatBudget": 800000
+    },
+    {
+      "id": "sainte-anne",
+      "superSplatId": "7a1bb85b",
+      "title": "Sainte-Anne-de-Beaupré",
+      "author": "jeastaman",
+      "bundled": false,
+      "splatBudget": 800000
+    },
+    {
+      "id": "botanical-garden",
+      "superSplatId": "e2b36b69",
+      "title": "Botanical Garden",
+      "author": "simonbethke",
+      "bundled": false,
+      "splatBudget": 800000
+    }
+  ]
+}

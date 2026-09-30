@@ -1,0 +1,23 @@
+{
+  "firestore": {
+    "rules": "firestore.rules"
+  },
+  "functions": [
+    {
+      "source": "apps/account-functions",
+      "codebase": "account-cleanup",
+      "runtime": "nodejs22",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "src",
+        "test",
+        "tsconfig*.json",
+        ".secret*",
+        ".env*",
+        "*.log"
+      ],
+      "predeploy": ["corepack pnpm --filter @oculo/account-functions build"]
+    }
+  ]
+}

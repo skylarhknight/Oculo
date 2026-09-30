@@ -1,0 +1,1202 @@
+/*
+ * Shared mobile components in Apple's design language. Token-only: no raw colors,
+ * spacing, radii, or timing. Screens compose these classes; screen stylesheets add
+ * layout only.
+ */
+
+/* ── Base ───────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html {
+  min-width: var(--viewport-min-w);
+  min-height: 100%;
+  /* Shows around the scaled-back screen while a sheet is open, like iOS. */
+  background: var(--color-backdrop);
+}
+body {
+  margin: 0;
+  min-width: var(--viewport-min-w);
+  min-height: 100vh;
+  overscroll-behavior: none;
+  background: var(--color-backdrop);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--text-lg);
+  letter-spacing: var(--tracking-body);
+  line-height: var(--leading-snug);
+  font-synthesis: none;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+input,
+textarea {
+  user-select: text;
+  -webkit-user-select: text;
+}
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  letter-spacing: inherit;
+}
+button {
+  color: inherit;
+  touch-action: manipulation;
+}
+a {
+  color: var(--color-accent);
+}
+output,
+time,
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+.visually-hidden {
+  position: absolute;
+  width: var(--space-px);
+  height: var(--space-px);
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ── Screen scaffold ────────────────────────────────── */
+.screen {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg-grouped);
+  color: var(--color-text);
+}
+.screen-scroll {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 calc(var(--gutter) + var(--safe-right)) var(--space-6)
+    calc(var(--gutter) + var(--safe-left));
+}
+.screen-scroll > * {
+  max-width: var(--content-max-w);
+  margin-inline: auto;
+}
+
+/*
+ * Navigation bar: transparent at rest; once content scrolls beneath it
+ * (data-scrolled, from useScrollEdge) it gains chrome material and a hairline,
+ * and the inline title fades in as the large title scrolls away.
+ */
+.app-bar {
+  position: relative;
+  z-index: var(--z-bar);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: calc(var(--app-bar-h) + var(--safe-top));
+  padding: var(--safe-top) calc(var(--space-2) + var(--safe-right)) 0
+    calc(var(--space-2) + var(--safe-left));
+  background: transparent;
+  box-shadow: 0 var(--border-hairline) 0 transparent;
+  transition:
+    background-color var(--dur-fast) var(--ease-standard),
+    box-shadow var(--dur-fast) var(--ease-standard);
+}
+.screen[data-scrolled="true"] .app-bar {
+  background: var(--material-chrome);
+  -webkit-backdrop-filter: var(--material-blur);
+  backdrop-filter: var(--material-blur);
+  box-shadow: 0 var(--border-hairline) 0 var(--color-separator);
+}
+.app-bar .icon-btn {
+  color: var(--color-accent);
+}
+.app-bar__title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition:
+    opacity var(--dur-fast) var(--ease-standard),
+    transform var(--dur-base) var(--spring-smooth);
+}
+.screen:has(.large-title) .app-bar__title {
+  opacity: 0;
+  transform: translate3d(0, var(--space-1), 0);
+}
+.screen[data-scrolled="true"]:has(.large-title) .app-bar__title {
+  opacity: 1;
+  transform: none;
+}
+.app-bar__spacer {
+  width: var(--hit-min);
+}
+.scroll-edge {
+  height: var(--space-px);
+  margin-bottom: calc(var(--space-px) * -1);
+}
+/*
+ * Screen titles are display type, as on apple.com. As the page scrolls the title
+ * recedes (shrinks and fades) with the scroll position where scroll-driven animations
+ * are supported; elsewhere it fades once the page has scrolled.
+ */
+.large-title {
+  margin: var(--space-2) 0 var(--space-5);
+  font-family: var(--font-display);
+  font-size: var(--text-display-s);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-hero);
+  line-height: var(--leading-display);
+  transform-origin: left bottom;
+  transition: opacity var(--dur-fast) var(--ease-standard);
+}
+.screen[data-scrolled="true"] .large-title {
+  opacity: 0;
+}
+@supports (animation-timeline: scroll()) {
+  .large-title {
+    animation: title-recede linear both;
+    animation-timeline: scroll(nearest block);
+    animation-range: 0 calc(var(--text-display-s) * 2);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .large-title {
+    animation: none;
+  }
+}
+:root[data-reduce-motion="true"] .large-title {
+  animation: none;
+}
+@keyframes title-recede {
+  to {
+    opacity: 0;
+    transform: scale(0.86) translate3d(0, calc(-1 * var(--space-2)), 0);
+  }
+}
+/* A headline word in the hero spectrum. */
+.gradient-text {
+  background: var(--gradient-hero);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+/* Scroll reveals (ui/useReveal.ts): hidden only while an observer watches them. */
+[data-reveal] {
+  transition:
+    opacity var(--dur-reveal) var(--ease-reveal),
+    transform var(--dur-reveal) var(--ease-reveal);
+  transition-delay: calc(min(var(--reveal-i, 0), var(--stagger-max)) * var(--stagger-step) * 2);
+}
+[data-reveal="pending"] {
+  opacity: 0;
+  transform: translate3d(0, var(--reveal-distance), 0) scale(0.98);
+}
+.large-title-button {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  text-align: left;
+  cursor: text;
+}
+/* Grouped section header: footnote size, secondary label, uppercase. */
+.eyebrow {
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-regular);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+}
+.kicker {
+  color: var(--color-accent);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+}
+.section-label {
+  margin: var(--space-6) 0 var(--space-2);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+.section-label h2 {
+  margin: 0;
+  font-size: var(--text-xl);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-tight);
+  text-transform: none;
+  color: var(--color-text);
+}
+
+/* Primary actions live here, inside the thumb zone. */
+.bottom-bar {
+  position: relative;
+  z-index: var(--z-bar);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: calc(var(--bottom-bar-h) + var(--safe-bottom));
+  padding: var(--space-3) calc(var(--gutter) + var(--safe-right))
+    calc(var(--space-3) + var(--safe-bottom)) calc(var(--gutter) + var(--safe-left));
+  background: var(--material-chrome);
+  -webkit-backdrop-filter: var(--material-blur);
+  backdrop-filter: var(--material-blur);
+  box-shadow: 0 calc(var(--border-hairline) * -1) 0 var(--color-separator);
+}
+.bottom-bar .btn--primary {
+  flex: 1;
+}
+
+/* ── Press feedback ─────────────────────────────────── */
+/*
+ * Pressing scales down immediately; releasing springs back, like a UIKit
+ * highlight. The release spring lives on the resting state.
+ */
+.btn,
+.icon-btn,
+.chip,
+.action-row,
+.list-row,
+.card-button,
+.primary-button,
+.secondary-button,
+.icon-button {
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    transform var(--dur-base) var(--spring-snappy),
+    background-color var(--dur-fast) var(--ease-standard),
+    color var(--dur-fast) var(--ease-standard),
+    opacity var(--dur-fast) var(--ease-standard);
+}
+.btn:active:not(:disabled),
+.icon-btn:active:not(:disabled),
+.chip:active:not(:disabled),
+.card-button:active:not(:disabled),
+.primary-button:active:not(:disabled),
+.secondary-button:active:not(:disabled),
+.icon-button:active:not(:disabled) {
+  transform: scale(var(--press-scale));
+  opacity: var(--press-opacity);
+  transition-duration: var(--dur-instant);
+}
+
+/* ── Buttons ────────────────────────────────────────── */
+.btn,
+.primary-button,
+.secondary-button {
+  min-height: var(--hit-comfy);
+  padding: 0 var(--space-5);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  border: 0;
+  border-radius: var(--radius-button);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-body);
+  text-decoration: none;
+  cursor: pointer;
+}
+.btn:disabled,
+.primary-button:disabled,
+.secondary-button:disabled {
+  opacity: var(--disabled-opacity);
+  cursor: not-allowed;
+}
+/* Filled (prominent). */
+.btn--primary,
+.primary-button {
+  background: var(--color-accent);
+  color: var(--color-text-on-accent);
+}
+/* Tinted. */
+.btn--secondary,
+.secondary-button {
+  background: var(--color-tint-soft);
+  color: var(--color-accent);
+}
+/* Plain. */
+.btn--ghost {
+  background: transparent;
+  color: var(--color-accent);
+}
+/* An apple.com link: accent text with a chevron that nudges forward on press. */
+.btn--link {
+  min-height: var(--hit-min);
+  padding: 0 var(--space-2);
+  background: transparent;
+  color: var(--color-accent);
+}
+.btn--link::after {
+  content: "›";
+  font-size: 1.2em;
+  line-height: 1;
+  transition: transform var(--dur-base) var(--spring-snappy);
+}
+.btn--link:active:not(:disabled)::after {
+  transform: translate3d(var(--space-1), 0, 0);
+}
+.btn--danger {
+  background: var(--color-danger);
+  color: var(--color-text-on-accent);
+}
+.secondary-button.danger {
+  background: var(--color-fill-3);
+  color: var(--color-danger);
+}
+.btn--block,
+.secondary-button.full,
+.primary-button.full-width {
+  width: 100%;
+}
+.btn--small,
+.primary-button.compact {
+  min-height: var(--hit-min);
+  padding: 0 var(--space-4);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-md);
+}
+.button-stack {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.icon-btn,
+.icon-button {
+  width: var(--hit-min);
+  height: var(--hit-min);
+  flex: none;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+}
+.icon-btn:disabled,
+.icon-button:disabled {
+  opacity: var(--disabled-opacity);
+}
+.icon-btn--filled {
+  background: var(--color-fill-3);
+  color: var(--color-accent);
+}
+/* Glass control over a scene or image. */
+.icon-btn--overlay {
+  background: var(--material-ultrathin);
+  -webkit-backdrop-filter: var(--material-blur);
+  backdrop-filter: var(--material-blur);
+  color: var(--color-on-scene);
+  box-shadow: inset 0 0 0 var(--border-hairline) var(--material-edge);
+}
+/* Sheet close: small circular gray button with an xmark. */
+.bsheet-header .icon-btn,
+.modal-header .icon-button,
+.video-export-heading .icon-button {
+  width: var(--space-7);
+  height: var(--space-7);
+  margin: calc((var(--hit-min) - var(--space-7)) / 2);
+  background: var(--color-fill-3);
+  color: var(--color-text-secondary);
+}
+
+.chip {
+  min-height: var(--hit-min);
+  padding: 0 var(--space-3);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--color-fill-3);
+  color: var(--color-text);
+  font-size: var(--text-md);
+  font-weight: var(--weight-medium);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.chip:disabled {
+  opacity: var(--disabled-opacity);
+}
+.chip[aria-pressed="true"],
+.chip.is-active {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+.chip--overlay {
+  background: var(--material-ultrathin);
+  -webkit-backdrop-filter: var(--material-blur);
+  backdrop-filter: var(--material-blur);
+  color: var(--color-on-scene);
+  box-shadow: inset 0 0 0 var(--border-hairline) var(--material-edge);
+}
+.chip--overlay[aria-pressed="true"] {
+  background: var(--color-on-scene);
+  color: var(--color-on-scene-inverse);
+}
+.chip-row {
+  display: flex;
+  gap: var(--space-2);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.chip-row::-webkit-scrollbar {
+  display: none;
+}
+
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+a:focus-visible,
+[role="slider"]:focus-visible,
+.modal-dialog:focus-visible {
+  outline: var(--border-focus) solid var(--color-focus-ring);
+  outline-offset: var(--border-focus);
+}
+.modal-dialog:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ── Segmented control ─────────────────────────────── */
+/*
+ * The selected segment is a raised thumb that slides between options. The thumb
+ * is the parent's ::before, positioned by --seg-index / --seg-count set in
+ * controls.tsx, so it travels with a spring instead of jumping.
+ */
+.segmented-control {
+  --seg-count: 1;
+  --seg-index: 0;
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  padding: var(--space-half);
+  border-radius: var(--radius-sm);
+  background: var(--color-fill-3);
+}
+.segmented-control::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: var(--space-half);
+  bottom: var(--space-half);
+  left: var(--space-half);
+  width: calc((100% - var(--space-half) * 2) / var(--seg-count));
+  border-radius: calc(var(--radius-sm) - var(--space-half));
+  background: var(--color-cell);
+  box-shadow: var(--shadow-knob);
+  transform: translate3d(calc(100% * var(--seg-index)), 0, 0);
+  transition: transform var(--dur-slow) var(--spring-smooth);
+}
+[data-appearance="dark"] .segmented-control::before {
+  background: var(--color-fill-1);
+}
+.segmented-control:not(:has(.is-active))::before {
+  opacity: 0;
+}
+.segmented-control button {
+  flex: 1;
+  min-width: 0;
+  min-height: calc(var(--hit-min) - var(--space-2));
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  border: 0;
+  border-radius: calc(var(--radius-sm) - var(--space-half));
+  background: transparent;
+  color: var(--color-text);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  cursor: pointer;
+  transition:
+    transform var(--dur-base) var(--spring-snappy),
+    font-weight var(--dur-fast) var(--ease-standard);
+}
+.segmented-control button:active {
+  transform: scale(var(--press-scale));
+}
+.segmented-control button.is-active {
+  font-weight: var(--weight-semibold);
+}
+
+/* ── Fields ─────────────────────────────────────────── */
+.field,
+.field-stack {
+  display: grid;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+.field > span,
+.field-label {
+  padding-inline: var(--space-4);
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caps);
+}
+.field input,
+.field textarea,
+.field select,
+.field-stack input,
+.field-stack textarea,
+.search-field input {
+  width: 100%;
+  min-height: var(--hit-min);
+  padding: 0 var(--space-4);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--color-cell);
+  color: var(--color-text);
+  font-size: var(--text-lg);
+  appearance: none;
+  transition: box-shadow var(--dur-fast) var(--ease-standard);
+}
+.field input:focus,
+.field textarea:focus,
+.field select:focus,
+.field-stack input:focus,
+.field-stack textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 var(--border-focus) var(--color-accent);
+}
+.field textarea,
+.field-stack textarea {
+  padding: var(--space-3) var(--space-4);
+  resize: vertical;
+  line-height: var(--leading-normal);
+}
+.search-field {
+  position: relative;
+  display: block;
+}
+.search-field input {
+  min-height: calc(var(--hit-min) - var(--space-1));
+  padding-left: calc(var(--space-2) + var(--icon-md) + var(--space-1));
+  border-radius: var(--radius-md);
+  background: var(--color-fill-3);
+  font-size: var(--text-lg);
+}
+.search-field input::placeholder {
+  color: var(--color-text-secondary);
+}
+.search-field svg {
+  position: absolute;
+  left: var(--space-2);
+  top: 50%;
+  translate: 0 -50%;
+  color: var(--color-text-secondary);
+  pointer-events: none;
+}
+
+/* ── Inset grouped lists ───────────────────────────── */
+.list-group {
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background: var(--color-cell);
+}
+.list-row {
+  position: relative;
+  width: 100%;
+  min-height: var(--hit-min);
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  border: 0;
+  background: transparent;
+  color: var(--color-text);
+  font-size: var(--text-lg);
+  text-align: left;
+}
+/* Separators inset from the leading edge; none after the last row. */
+.list-row + .list-row::before,
+.list-group > * + * > .list-row::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: var(--space-4);
+  height: var(--border-hairline);
+  background: var(--color-separator);
+  transform: scaleY(0.5);
+  transform-origin: top;
+}
+.list-row:has(> svg:first-child) + .list-row::before {
+  left: calc(var(--space-4) + var(--icon-md) + var(--space-3));
+}
+button.list-row {
+  cursor: pointer;
+}
+button.list-row:active:not(:disabled) {
+  background: var(--color-surface-pressed);
+  transition-duration: var(--dur-none);
+}
+.list-row > svg:first-child {
+  color: var(--color-accent);
+}
+.list-row__main {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  gap: var(--space-half);
+}
+.list-row__main small,
+.meta {
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+}
+.list-row__value {
+  color: var(--color-text-secondary);
+  font-size: var(--text-lg);
+}
+.list-row > svg:last-child:not(:first-child) {
+  color: var(--color-text-tertiary);
+}
+
+/* ── Cards ─────────────────────────────────────────── */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--card-min-w)), 1fr));
+  gap: var(--space-4) var(--space-3);
+}
+.card-grid--wide {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--card-wide-min-w)), 1fr));
+}
+.card {
+  position: relative;
+  min-width: 0;
+  border-radius: var(--radius-lg);
+  background: var(--color-cell);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+.card-button {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.card__thumb {
+  aspect-ratio: var(--card-thumb-ratio);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: var(--color-fill-4);
+  color: var(--color-text-tertiary);
+}
+.card__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--dur-slow) var(--spring-smooth);
+}
+.card-button:active .card__thumb img {
+  transform: scale(1.03);
+}
+.card__body {
+  padding: var(--space-3);
+  display: grid;
+  gap: var(--space-half);
+}
+.card__title {
+  overflow: hidden;
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.card__menu {
+  position: absolute;
+  top: var(--space-1);
+  right: var(--space-1);
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-half) var(--space-2);
+  border-radius: var(--radius-pill);
+  background: var(--material-thin);
+  -webkit-backdrop-filter: var(--material-blur);
+  backdrop-filter: var(--material-blur);
+  color: var(--color-text);
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-semibold);
+}
+.badge--accent {
+  background: var(--color-accent);
+  color: var(--color-text-on-accent);
+}
+.card__badges {
+  position: absolute;
+  left: var(--space-2);
+  top: var(--space-2);
+  display: flex;
+  gap: var(--space-1);
+}
+
+.empty-state {
+  padding: var(--space-8) var(--space-4);
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2);
+  color: var(--color-text-secondary);
+  font-size: var(--text-md);
+  text-align: center;
+}
+.empty-state > svg {
+  color: var(--color-text-tertiary);
+}
+.empty-state h2 {
+  margin: var(--space-2) 0 0;
+  color: var(--color-text);
+  font-size: var(--text-xl);
+  font-weight: var(--weight-bold);
+}
+
+.inline-error,
+.inline-alert {
+  margin: var(--space-3) 0;
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--color-cell);
+  color: var(--color-danger);
+  font-size: var(--text-md);
+  animation: alert-in var(--dur-base) var(--spring-smooth) both;
+}
+.inline-alert {
+  color: var(--color-warning);
+}
+@keyframes alert-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, calc(var(--space-2) * -1), 0);
+  }
+}
+
+/* Loading placeholder with a soft shimmer sweep. */
+.skeleton {
+  border-radius: var(--radius-lg);
+  background: linear-gradient(100deg, transparent 30%, var(--color-fill-4) 50%, transparent 70%)
+    var(--color-skeleton);
+  background-size: 250% 100%;
+  animation: skeleton-shimmer var(--dur-ambient) var(--ease-standard) infinite;
+}
+@keyframes skeleton-shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -150% 0;
+  }
+}
+
+/* One staggered entrance for list content on first paint. */
+.stagger-in > * {
+  animation: stagger-rise var(--dur-slow) var(--spring-smooth) both;
+  animation-delay: calc(min(var(--i, 0), var(--stagger-max)) * var(--stagger-step));
+}
+@keyframes stagger-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, var(--stagger-rise), 0);
+  }
+}
+/* A value that just changed (counts, badges) pops once. */
+.pop-in {
+  animation: pop-in var(--dur-slow) var(--spring-bouncy) both;
+}
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+
+/* ── Controls ───────────────────────────────────────── */
+.panel-title {
+  margin-bottom: var(--space-3);
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+.panel-title span {
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+}
+.panel-title h3 {
+  margin: 0;
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+}
+
+/* Slider: thin track with a tint fill and a white knob that swells while held. */
+.range-control {
+  display: block;
+  margin: 0 0 var(--space-4);
+}
+.range-control > span {
+  margin-bottom: var(--space-2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
+}
+.range-control b {
+  color: var(--color-text);
+  font-size: var(--text-md);
+  font-weight: var(--weight-regular);
+}
+.range-control output {
+  color: var(--color-text-secondary);
+  font-size: var(--text-md);
+  font-variant-numeric: tabular-nums;
+}
+.range-control input {
+  width: 100%;
+  height: var(--slider-knob);
+  margin: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+.range-control input::-webkit-slider-runnable-track {
+  height: var(--slider-track-h);
+  border-radius: var(--radius-pill);
+  background: linear-gradient(
+    90deg,
+    var(--color-accent) var(--range-value),
+    var(--color-fill-1) var(--range-value)
+  );
+}
+.range-control input::-moz-range-track {
+  height: var(--slider-track-h);
+  border-radius: var(--radius-pill);
+  background: var(--color-fill-1);
+}
+.range-control input::-moz-range-progress {
+  height: var(--slider-track-h);
+  border-radius: var(--radius-pill);
+  background: var(--color-accent);
+}
+.range-control input::-webkit-slider-thumb {
+  width: var(--slider-knob);
+  height: var(--slider-knob);
+  margin-top: calc((var(--slider-track-h) - var(--slider-knob)) / 2);
+  appearance: none;
+  -webkit-appearance: none;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--color-knob);
+  box-shadow: var(--shadow-knob);
+  transition: transform var(--dur-base) var(--spring-bouncy);
+}
+.range-control input::-moz-range-thumb {
+  width: var(--slider-knob);
+  height: var(--slider-knob);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--color-knob);
+  box-shadow: var(--shadow-knob);
+}
+.range-control input:active::-webkit-slider-thumb {
+  transform: scale(1.12);
+}
+.range-control.is-disabled,
+.range-control input:disabled {
+  cursor: not-allowed;
+}
+.range-control.is-disabled input {
+  opacity: var(--disabled-opacity);
+}
+
+/* Switch: iOS 51×31, green when on, a knob that stretches while pressed. */
+.toggle-row {
+  position: relative;
+  min-height: var(--hit-min);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--color-text);
+  font-size: var(--text-lg);
+  cursor: pointer;
+}
+.toggle-row > span {
+  display: grid;
+  gap: var(--space-half);
+}
+.toggle-row small {
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+}
+.toggle-row input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.toggle-row i {
+  position: relative;
+  width: var(--switch-w);
+  height: var(--switch-h);
+  border-radius: var(--radius-pill);
+  background: var(--color-switch-off);
+  transition: background-color var(--dur-base) var(--ease-standard);
+}
+.toggle-row i::after {
+  content: "";
+  position: absolute;
+  top: calc((var(--switch-h) - var(--switch-knob)) / 2);
+  left: calc((var(--switch-h) - var(--switch-knob)) / 2);
+  width: var(--switch-knob);
+  height: var(--switch-knob);
+  border-radius: var(--radius-pill);
+  background: var(--color-knob);
+  box-shadow: var(--shadow-knob);
+  transition:
+    left var(--dur-slow) var(--spring-bouncy),
+    width var(--dur-base) var(--spring-snappy);
+}
+.toggle-row i svg {
+  display: none;
+}
+.toggle-row:active i::after {
+  width: var(--switch-knob-stretch);
+}
+.toggle-row input:checked + i {
+  background: var(--color-success);
+}
+.toggle-row input:checked + i::after {
+  left: calc(var(--switch-w) - var(--switch-knob) - (var(--switch-h) - var(--switch-knob)) / 2);
+}
+.toggle-row:active input:checked + i::after {
+  left: calc(
+    var(--switch-w) - var(--switch-knob-stretch) - (var(--switch-h) - var(--switch-knob)) / 2
+  );
+}
+.toggle-row input:focus-visible + i {
+  outline: var(--border-focus) solid var(--color-focus-ring);
+  outline-offset: var(--border-focus);
+}
+
+/* ── Sheets (every modal renders as a bottom sheet on phones) ── */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-sheet);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: calc(var(--safe-top) + var(--space-3)) 0 0;
+  background: var(--color-scrim);
+  animation: sheet-scrim-in var(--dur-base) var(--ease-standard) both;
+}
+.modal-backdrop > .modal-dialog {
+  --sheet-drag: 0px;
+  position: relative;
+  width: 100%;
+  max-width: var(--content-max-w);
+  max-height: var(--sheet-max-h);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-bottom: var(--safe-bottom);
+  border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
+  background: var(--color-bg-grouped);
+  color: var(--color-text);
+  box-shadow: var(--shadow-sheet);
+  transform: translate3d(0, var(--sheet-drag), 0);
+  transition: transform var(--dur-slow) var(--spring-smooth);
+  animation: sheet-rise var(--dur-sheet) var(--spring-smooth) both;
+}
+.modal-backdrop > .sheet {
+  overflow: hidden;
+  padding-bottom: 0;
+}
+/* While a finger drags the grabber, follow it exactly; on release, spring home. */
+.modal-backdrop > .sheet[data-dragging="true"] {
+  animation: none;
+  transition: none;
+}
+.modal-backdrop > .modal-dialog > .modal-body,
+.bsheet-body {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--space-2) var(--gutter) calc(var(--space-6) + var(--safe-bottom));
+}
+.bsheet-header,
+.modal-dialog > header,
+.modal-header {
+  position: relative;
+  min-height: calc(var(--hit-min) + var(--space-4));
+  padding: var(--space-3) var(--space-1) 0 var(--gutter);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+.bsheet-header {
+  touch-action: none;
+}
+.bsheet-header h2,
+.modal-dialog h2 {
+  margin: 0;
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+}
+.bsheet-grabber {
+  position: absolute;
+  top: var(--space-1);
+  left: 50%;
+  width: var(--sheet-handle-w);
+  height: var(--sheet-handle-h);
+  translate: -50% 0;
+  border-radius: var(--radius-pill);
+  background: var(--color-text-tertiary);
+}
+.bsheet-footer {
+  padding: var(--space-3) var(--gutter) calc(var(--space-3) + var(--safe-bottom));
+  background: var(--material-chrome);
+  -webkit-backdrop-filter: var(--material-blur);
+  backdrop-filter: var(--material-blur);
+  box-shadow: 0 calc(var(--border-hairline) * -1) 0 var(--color-separator);
+}
+.bsheet-body:has(+ .bsheet-footer) {
+  padding-bottom: var(--space-4);
+}
+.sheet-message {
+  margin: 0 0 var(--space-3);
+  color: var(--color-text-secondary);
+  font-size: var(--text-md);
+  line-height: var(--leading-normal);
+}
+@keyframes sheet-rise {
+  from {
+    transform: translate3d(0, 100%, 0);
+  }
+}
+@keyframes sheet-scrim-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/*
+ * Depth: while a sheet is up, the app behind it recedes — scaled back with rounded
+ * corners, like an iOS page sheet. The scene workspace is exempt so its WebGL
+ * canvas never scales.
+ */
+.nav-stack {
+  transform-origin: 50% 0;
+  transition:
+    transform var(--dur-sheet) var(--spring-smooth),
+    border-radius var(--dur-sheet) var(--spring-smooth),
+    filter var(--dur-sheet) var(--ease-standard);
+}
+body:has(> .modal-backdrop) .nav-stack:not(:has(.workspace-screen)) {
+  transform: translate3d(0, calc(var(--safe-top) + var(--space-2)), 0)
+    scale(var(--sheet-depth-scale));
+  border-radius: var(--radius-lg);
+  filter: brightness(0.92);
+}
+
+/* Action sheet: grouped rows, destructive in red. */
+.action-list {
+  overflow: hidden;
+  display: grid;
+  border-radius: var(--radius-md);
+  background: var(--color-cell);
+}
+.action-row {
+  position: relative;
+  min-height: var(--hit-comfy);
+  padding: 0 var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  border: 0;
+  background: transparent;
+  color: var(--color-accent);
+  font-size: var(--text-lg);
+  text-align: left;
+  cursor: pointer;
+}
+.action-row + .action-row::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: var(--space-4);
+  height: var(--border-hairline);
+  background: var(--color-separator);
+  transform: scaleY(0.5);
+}
+.action-row:active:not(:disabled) {
+  background: var(--color-surface-pressed);
+  transition-duration: var(--dur-none);
+}
+.action-row:disabled {
+  opacity: var(--disabled-opacity);
+}
+.action-row.is-destructive {
+  color: var(--color-danger);
+}
+
+/* ── Scene loading states ─────────────────────────── */
+.loader,
+.spin {
+  animation: spin calc(var(--dur-ambient) / 2) linear infinite;
+}
+.loader {
+  width: var(--icon-sm);
+  height: var(--icon-sm);
+  border: var(--border-focus) solid var(--color-fill-1);
+  border-top-color: var(--color-text-secondary);
+  border-radius: var(--radius-pill);
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* A copy of an element flying between two places (ui/flip.ts). */
+.flight-ghost {
+  position: fixed;
+  z-index: var(--z-toast);
+  margin: 0;
+  transform-origin: 0 0;
+  object-fit: cover;
+  pointer-events: none;
+  box-shadow: var(--shadow-float);
+}
