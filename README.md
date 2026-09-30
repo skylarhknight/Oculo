@@ -125,4 +125,4 @@ Third-party components and assets keep their own licenses and notices; see `apps
 
 ## License
 
-Licensed under the [Apache License, Version 2.0](LICENSE). See [NOTICE](NOTICE).
+Licensed under the [MIT License](LICENSE). Third-party components keep their own licenses, as described above.
