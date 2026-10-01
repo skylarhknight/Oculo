@@ -1,5 +1,19 @@
 # Oculo
 
+<p align="center">
+  <img src="docs/hero.png" width="95%" alt="Oculo hero">
+</p>
+
+<p align="center">
+  Spatial cinematography for photorealistic 3D worlds.
+</p>
+
+<p align="center">
+  <a href="#">Demo</a> •
+  <a href="#">Devpost</a> •
+  <a href="#run-the-ios-app">Run Locally</a>
+</p>
+
 <img src="apps/mobile/assets/icon-512.png" align="right" width="120" alt="Oculo app icon">
 
 Oculo is an iPhone app for spatial cinematography, built with Capacitor, React and TypeScript. A filmmaker enters a photorealistic world, scouts it, composes shots with real camera and lens controls, saves them as static shots or moving shots built from keyframes, previews the result, and shares it.
