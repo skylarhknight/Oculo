@@ -6,6 +6,23 @@ The [Version 1.0 PRD](docs/PRD.md) defines an iPhone shot-planning app: durable 
 
 Accounts and cloud sync are disabled unless you provide Firebase environment values, and purchases are disabled unless you provide RevenueCat configuration. Local importing, editing and exports work without either.
 
+## Screenshots
+
+<table>
+  <tr>
+    <td align="center"><img src="docs/screenshots/01-scene-gallery.png" width="200" alt="Scene gallery with bundled scenes and an import option"><br><sub>Pick a bundled scene or import your own <code>.spz</code></sub></td>
+    <td align="center"><img src="docs/screenshots/02-compose-pantheon.png" width="200" alt="Composing a shot in the Pantheon with lens controls"><br><sub>Frame a shot with real lens controls</sub></td>
+    <td align="center"><img src="docs/screenshots/03-moving-shot-keyframes.png" width="200" alt="A moving shot with a keyframe timeline on Perseverance Rover"><br><sub>Plan a camera move with keyframes</sub></td>
+    <td align="center"><img src="docs/screenshots/04-map-view-iss.png" width="200" alt="Top-down map view of the International Space Station"><br><sub>Map view with the cinematographer figure</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/screenshots/05-shots-storyboard-iss.png" width="200" alt="Storyboard of saved shots with camera positions on the scene"><br><sub>Saved shots as a storyboard</sub></td>
+    <td align="center"><img src="docs/screenshots/06-export-shot-plan.png" width="200" alt="Export screen with the Shot plan option"><br><sub>Export a printable shot plan</sub></td>
+    <td align="center"><img src="docs/screenshots/07-compose-perseverance.png" width="200" alt="Composing a close-up on Perseverance Rover"><br><sub>Compose with focal length and focus</sub></td>
+    <td align="center"><img src="docs/screenshots/08-export-iss.png" width="200" alt="Export screen for a shot of the International Space Station"><br><sub>Shot plan, video and data exports</sub></td>
+  </tr>
+</table>
+
 ## Prerequisites
 
 - Node.js 22 or newer
