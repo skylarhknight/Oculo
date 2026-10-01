@@ -162,7 +162,6 @@ pnpm lint && pnpm typecheck && pnpm test && pnpm build
 
 ## Documentation
 
-- [`CLAUDE.md`](CLAUDE.md) — repository rules for coding agents
 - [`docs/SCENE_CONTRACTS.md`](docs/SCENE_CONTRACTS.md) — implemented Phase 4A contracts and migration limitations
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — boundaries, target layout, and local persistence
 - [`docs/MVP.md`](docs/MVP.md) — revised Phase 1–14 checklist, Pro boundary, and deferred scope

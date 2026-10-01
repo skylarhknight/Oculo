@@ -1,11 +1,6 @@
 # Architecture
 
-## Status
-
-This document describes implemented source boundaries. Native builds have
-succeeded; simulator first launch exposed an unconfigured Firebase startup
-crash. The conditional-plugin fix is implemented, with subsequent launch and
-physical-device rendering/sharing verification still pending.
+This document describes implemented source boundaries.
 
 ## Principles
 
