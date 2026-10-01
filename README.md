@@ -1,11 +1,16 @@
 # Oculo
-
 <p align="center">
   <img src="docs/hero.png" width="95%" alt="Oculo hero">
 </p>
 
 <p align="center">
-  Spatial cinematography for photorealistic 3D worlds.
+  <strong>Spatial cinematography for photorealistic 3D worlds.</strong>
+</p>
+
+<p align="center">
+  <a href="#">Demo</a> •
+  <a href="https://devpost.com/software/oculo-mwnf3v?ref_content=user-portfolio&ref_feature=in_progress">Devpost</a> •
+  <a href="#run-the-ios-app">Run Locally</a>
 </p>
 
 <p align="center">
@@ -14,16 +19,6 @@
   <img src="https://img.shields.io/badge/Capacitor-Mobile-119EFF?logo=capacitor&logoColor=white">
   <img src="https://img.shields.io/badge/3DGS-SPZ-6C63FF">
   <img src="https://img.shields.io/badge/license-MIT-2EA44F">
-  <a href="https://devpost.com/software/oculo-mwnf3v?ref_content=user-portfolio&ref_feature=in_progress">
-    <img src="https://img.shields.io/badge/Devpost-Project-003E54?logo=devpost&logoColor=white">
-  </a>
-</p>
-
-
-<p align="center">
-  <a href="#">Demo</a> •
-  <a href="#">Devpost</a> •
-  <a href="#run-the-ios-app">Run Locally</a>
 </p>
 
 
