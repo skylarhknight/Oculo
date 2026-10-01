@@ -259,6 +259,7 @@ async function buildScene(scene) {
     source: scene.prebuilt ? null : source,
     retrieved:
       previous[scene.id]?.sha256 === sha256(bytes) ? previous[scene.id].retrieved : retrieved,
+    ...(scene.mapEyeHeight ? { mapEyeHeight: scene.mapEyeHeight } : {}),
   };
   if (!scene.prebuilt)
     writeFileSync(join(sceneDir, "ATTRIBUTION.txt"), attributionText(scene, entry, source));

@@ -1,5 +1,5 @@
 {
-  "$comment": "Scene gallery sources. Run `pnpm scenes:build` to fetch, thin, and re-encode them. Every entry must be CC BY 4.0 (or more permissive) and offered for download by its creator.",
+  "$comment": "Scene gallery sources. Run `pnpm scenes:build` to fetch, thin, and re-encode them. Optional mapEyeHeight sizes the map's cinematographer, in scene units, when the scene has no known metric scale. Every entry must be CC BY 4.0 (or more permissive) and offered for download by its creator.",
   "sourceBase": "https://d28zzqy0iyovbz.cloudfront.net",
   "thumbnailBase": "https://s3-eu-west-1.amazonaws.com/images.playcanvas.com/splat",
   "license": {
@@ -53,7 +53,8 @@
       "title": "Perseverance Rover",
       "author": "tmate",
       "bundled": true,
-      "splatBudget": 800000
+      "splatBudget": 800000,
+      "mapEyeHeight": 1.68
     },
     {
       "id": "iss-sunset",

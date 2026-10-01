@@ -1,8 +1,33 @@
 # Oculo
+<p align="center">
+  <img src="docs/hero.png" width="95%" alt="Oculo hero">
+</p>
 
-<img src="apps/mobile/assets/icon-512.png" align="right" width="120" alt="Oculo app icon">
+<p align="center">
+  <strong>Spatial cinematography for photorealistic 3D worlds.</strong>
+</p>
+
+<p align="center">
+  <a href="#">Demo</a> •
+  <a href="https://devpost.com/software/oculo-mwnf3v?ref_content=user-portfolio&ref_feature=in_progress">Devpost</a> •
+  <a href="#run-the-ios-app">Run Locally</a>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/iOS-26+-000000?logo=apple&logoColor=white">
+  <img src="https://img.shields.io/badge/React-TypeScript-3178C6?logo=react&logoColor=white">
+  <img src="https://img.shields.io/badge/Capacitor-Mobile-119EFF?logo=capacitor&logoColor=white">
+  <img src="https://img.shields.io/badge/3DGS-SPZ-6C63FF">
+  <img src="https://img.shields.io/badge/license-MIT-2EA44F">
+</p>
+
+
 
 Oculo is an iPhone app for spatial cinematography, built with Capacitor, React and TypeScript. A filmmaker enters a photorealistic world, scouts it, composes shots with real camera and lens controls, saves them as static shots or moving shots built from keyframes, previews the result, and shares it.
+
+<p align="center">
+  <img src="docs/demo.gif" width="85%">
+</p>
 
 The [Version 1.0 PRD](docs/PRD.md) defines an iPhone shot-planning app: durable SPZ import, saved shots, expanded movement editing, PNG shot sheets and supported MP4 previews. Free includes one saved project; the one-time Oculo Pro unlock adds projects. See [implementation alignment](docs/PRD_ALIGNMENT.md) for completed code and remaining device acceptance, and [architecture](docs/ARCHITECTURE.md).
 
@@ -159,14 +184,6 @@ pnpm lint && pnpm typecheck && pnpm test && pnpm build
 - Local-first project state is stored in IndexedDB.
 - Oculo does not silently upload customer scenes or project data.
 - Oculo does not build a custom replacement for World Labs Spark.
-
-## Documentation
-
-- [`docs/SCENE_CONTRACTS.md`](docs/SCENE_CONTRACTS.md) — implemented Phase 4A contracts and migration limitations
-- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — boundaries, target layout, and local persistence
-- [`docs/MVP.md`](docs/MVP.md) — revised Phase 1–14 checklist, Pro boundary, and deferred scope
-- [`docs/WORLD_LABS_INTEGRATION.md`](docs/WORLD_LABS_INTEGRATION.md) — current and future provider adapters
-- [`docs/FIREBASE.md`](docs/FIREBASE.md) — accounts, cloud project sync, and Firebase setup
 
 ## Third-party notices
 

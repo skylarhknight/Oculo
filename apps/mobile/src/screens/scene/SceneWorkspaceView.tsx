@@ -51,6 +51,7 @@ import type { LoadProgress, MapViewPhase, SceneEngine } from "@oculo/scene-core"
 import { useAppServices } from "../../app/AppServices";
 import { Joysticks, type NavigationDriver } from "../../components/Joysticks";
 import { MagicWindowControls } from "../../components/MagicWindowControls";
+import { galleryEyeHeight } from "../../config/sceneCatalog";
 import { SceneViewer } from "../../components/SceneViewer";
 import { useLeaveGuard, useNavigation } from "../../navigation/Navigation";
 import type { SceneStage } from "../../navigation/routes";
@@ -910,8 +911,12 @@ export function SceneWorkspaceView({
       await nextFrame();
       const scale = project.scene.metricScale;
       setRoofCut(engine.canCutAway ? engine.mapCutaway === "auto" : null);
+      const eyeHeight =
+        scale.status === "known"
+          ? 1.6 / scale.metersPerSceneUnit
+          : galleryEyeHeight(project.scene.id);
       const entering = engine.enterMapView({
-        ...(scale.status === "known" ? { eyeHeight: 1.6 / scale.metersPerSceneUnit } : {}),
+        ...(eyeHeight !== undefined ? { eyeHeight } : {}),
         reduceMotion: prefersReducedMotion(),
         frameHeightFraction: frameFractionRef.current,
       });
@@ -1072,6 +1077,48 @@ export function SceneWorkspaceView({
     !magicWindowActive;
   const fabDisabled = !sceneReady || isPlaying || isScrubbing;
   const lastThumbnail = project.shots.at(-1)?.thumbnailDataUrl;
+  const libraryButton = (
+    <button
+      className="capture-bar__library"
+      aria-label="Shot library"
+      disabled={project.shots.length === 0 || busyControls}
+      onClick={() => setOverlay("library")}
+    >
+      {lastThumbnail ? <img src={lastThumbnail} alt="" /> : <Images size={20} aria-hidden="true" />}
+      {project.shots.length > 0 && <i>{project.shots.length}</i>}
+    </button>
+  );
+  const shutter = (
+    <div className="capture-bar__shutter-wrap">
+      <button
+        key={`save-${savedPulse}`}
+        className={`shutter${activeShot ? " shutter--keyframe" : ""}${savedPulse ? " did-save" : ""}`}
+        aria-label={activeShot ? "Add keyframe" : "New shot"}
+        aria-busy={creating}
+        disabled={fabDisabled || creating}
+        onClick={() => void (activeShot ? addKeyframe() : createShotFromRig())}
+      >
+        <span className="shutter__core" aria-hidden="true">
+          {activeShot ? <i className="shutter__diamond" /> : null}
+        </span>
+      </button>
+      <span className="capture-bar__label" aria-hidden="true">
+        {activeShot ? "Add keyframe" : "New shot"}
+      </span>
+    </div>
+  );
+  const newShotButton = activeShot ? (
+    <button
+      className="capture-bar__side"
+      aria-label="New shot"
+      disabled={fabDisabled || creating}
+      onClick={() => void createShotFromRig()}
+    >
+      <Plus size={22} strokeWidth={2.4} />
+    </button>
+  ) : (
+    <span className="capture-bar__side capture-bar__side--empty" aria-hidden="true" />
+  );
 
   return (
     <div
@@ -1385,7 +1432,6 @@ export function SceneWorkspaceView({
             }}
           />
         )}
-        {showSticks && <Joysticks drive={drive} disabled={!navigationAllowed} />}
         {mapOpen && (
           <MapMode
             controls={mapPhase === "off" ? undefined : engineRef.current?.map}
@@ -1425,72 +1471,23 @@ export function SceneWorkspaceView({
             }}
           />
         )}
-        {stage === "compose" && activeShot && (
-          <div className="scene-progress-dock">
-            <SceneProgress
-              shot={activeShot}
-              transport={transport}
-              sceneReady={sceneReady}
-              atKeyframeId={atKeyframeId}
-              onSelectKeyframe={selectKeyframe}
-            />
-          </div>
-        )}
         {stage === "compose" && (
           <div className="capture-bar" data-shot={activeShot !== null}>
-            {activeShot && rigChanged && atKeyframeIndex !== undefined && atKeyframeIndex >= 0 && (
-              <button
-                className="capsule-btn capsule-btn--overlay capture-bar__update"
-                disabled={fabDisabled}
-                onClick={() => void updateCurrentKeyframe()}
-              >
-                <RefreshCcw size={16} /> Update keyframe {atKeyframeIndex + 1}
-              </button>
-            )}
-            <div className="capture-bar__row">
-              <button
-                className="capture-bar__library"
-                aria-label="Shot library"
-                disabled={project.shots.length === 0 || busyControls}
-                onClick={() => setOverlay("library")}
-              >
-                {lastThumbnail ? (
-                  <img src={lastThumbnail} alt="" />
-                ) : (
-                  <Images size={20} aria-hidden="true" />
-                )}
-                {project.shots.length > 0 && <i>{project.shots.length}</i>}
-              </button>
-              <div className="capture-bar__shutter-wrap">
-                <button
-                  key={`save-${savedPulse}`}
-                  className={`shutter${activeShot ? " shutter--keyframe" : ""}${savedPulse ? " did-save" : ""}`}
-                  aria-label={activeShot ? "Add keyframe" : "New shot"}
-                  aria-busy={creating}
-                  disabled={fabDisabled || creating}
-                  onClick={() => void (activeShot ? addKeyframe() : createShotFromRig())}
-                >
-                  <span className="shutter__core" aria-hidden="true">
-                    {activeShot ? <i className="shutter__diamond" /> : null}
-                  </span>
-                </button>
-                <span className="capture-bar__label" aria-hidden="true">
-                  {activeShot ? "Add keyframe" : "New shot"}
-                </span>
+            {showSticks ? (
+              <Joysticks drive={drive} disabled={!navigationAllowed}>
+                <div className="capture-bar__stack">
+                  {libraryButton}
+                  {newShotButton}
+                </div>
+                {shutter}
+              </Joysticks>
+            ) : (
+              <div className="capture-bar__row">
+                {libraryButton}
+                {shutter}
+                {newShotButton}
               </div>
-              {activeShot ? (
-                <button
-                  className="capture-bar__side"
-                  aria-label="New shot"
-                  disabled={fabDisabled || creating}
-                  onClick={() => void createShotFromRig()}
-                >
-                  <Plus size={22} strokeWidth={2.4} />
-                </button>
-              ) : (
-                <span className="capture-bar__side capture-bar__side--empty" aria-hidden="true" />
-              )}
-            </div>
+            )}
           </div>
         )}
       </section>
@@ -1504,6 +1501,27 @@ export function SceneWorkspaceView({
         >
           <span />
         </button>
+        {stage === "compose" && activeShot && (
+          <div className="shot-timeline">
+            <SceneProgress
+              shot={activeShot}
+              transport={transport}
+              sceneReady={sceneReady}
+              atKeyframeId={atKeyframeId}
+              onSelectKeyframe={selectKeyframe}
+            />
+            {rigChanged && atKeyframeIndex !== undefined && atKeyframeIndex >= 0 && (
+              <button
+                className="capsule-btn capsule-btn--overlay shot-timeline__update"
+                aria-label={`Update keyframe ${atKeyframeIndex + 1}`}
+                disabled={fabDisabled}
+                onClick={() => void updateCurrentKeyframe()}
+              >
+                <RefreshCcw size={16} /> Update
+              </button>
+            )}
+          </div>
+        )}
         <div className="stage-content" key={stage}>
           {stage === "compose" && (
             <ComposePanel
