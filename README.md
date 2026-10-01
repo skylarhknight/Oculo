@@ -1,12 +1,14 @@
 # Oculo
 
-Oculo is a mobile spatial-cinematography workspace. A filmmaker enters a photorealistic world, scouts it, composes shots with real camera and lens controls, saves them as static shots or moving shots built from keyframes, previews the result, and shares it.
+Oculo is an iPhone app for spatial cinematography, built with Capacitor, React and TypeScript. A filmmaker enters a photorealistic world, scouts it, composes shots with real camera and lens controls, saves them as static shots or moving shots built from keyframes, previews the result, and shares it.
 
 The [Version 1.0 PRD](docs/PRD.md) defines an iPhone shot-planning app: durable SPZ import, saved shots, expanded movement editing, PNG shot sheets and supported MP4 previews. Free includes one saved project; the one-time Oculo Pro unlock adds projects. See [implementation alignment](docs/PRD_ALIGNMENT.md) for completed code and remaining device acceptance, and [architecture](docs/ARCHITECTURE.md).
 
 Accounts and cloud sync are disabled unless you provide Firebase environment values, and purchases are disabled unless you provide RevenueCat configuration. Local importing, editing and exports work without either.
 
 ## Screenshots
+
+Captured in the iOS Simulator.
 
 <table>
   <tr>
@@ -23,76 +25,44 @@ Accounts and cloud sync are disabled unless you provide Firebase environment val
   </tr>
 </table>
 
-## Quick start (try it in a browser)
-
-You can run Oculo in a desktop browser in about two minutes, with no accounts, API keys or Apple/Google developer program. You need [Node.js](https://nodejs.org) (see [Prerequisites](#prerequisites)).
-
-```sh
-git clone https://github.com/skylarhknight/Oculo.git
-cd Oculo
-corepack enable
-pnpm install
-pnpm dev
-```
-
-If `corepack enable` fails with a permissions error (common on Windows without administrator rights), skip it and put `corepack` in front of each command instead, for example `corepack pnpm install` and `corepack pnpm dev`.
-
-Open <http://localhost:5173>. For the intended layout, use your browser's device toolbar to emulate a phone (for example in Chrome: DevTools, then Toggle device toolbar).
-
-1. Tap **New project** and choose a scene. Six scenes (Small Garden, LA Night, The Pantheon Interior, The Moon, Perseverance Rover and the International Space Station) are bundled and marked **On device**. Tap one to preview it, then **Select**. Scenes marked **Unavailable** need a hosted scene gallery that is not configured here; you can also import your own `.spz` file.
-2. Compose a shot with the lens controls, save it, and add more shots. A shot can be a moving shot built from keyframes.
-3. Open the storyboard, then export a shot plan.
-
-A **Tutorial** project is included and does not count toward the free limit.
-
-### See the Oculo Pro paywall
-
-Free includes one saved project. In a browser there is no store, so purchases are off by default. To try the unlock flow with a simulated purchase (no charge, no account), create the environment file, turn on demo mode, and restart `pnpm dev`:
-
-```sh
-cp apps/mobile/.env.example apps/mobile/.env.local
-```
-
-Then set `VITE_REVENUECAT_MOCK=true` in `apps/mobile/.env.local`. Tap **Upgrade** (top right) and **Get Oculo Pro**; the app shows "Oculo Pro is active". Demo mode only works under `pnpm dev` and is never used in a build.
-
-The real purchase, using the RevenueCat SDK and a RevenueCat Test Store, runs in the iOS app. See [Try the purchase flow with the RevenueCat Test Store](#try-the-purchase-flow-with-the-revenuecat-test-store).
-
-### What needs an iPhone
-
-- Real purchases through the RevenueCat SDK (iOS app).
-- **Magic Window**, which moves the virtual camera as you move a physical iPhone and uses the camera for motion tracking only. It is not available in the browser, where the control is hidden.
-
 ## Prerequisites
 
-- Node.js 24 is recommended. The app runs, builds and passes type-checking on Node 22.12 or newer, but the test runner (`pnpm test`) does not start on Node 22, so use Node 24 to run the full check below.
-- pnpm 11.21.0 (the version declared in `package.json`; `corepack enable` provides it)
-- For iOS: macOS, Xcode 26+, and either the iOS Simulator or an iPhone. Capacitor uses Swift Package Manager; CocoaPods is not required. The simulator needs no paid Apple developer account.
-- For Android: current Android Studio, Android SDK/platform tools, its bundled Java 21 runtime, and a physical Android device
+Oculo is an iPhone app. To build and run it you need:
 
-Enable the pinned package manager, then install dependencies:
+- A Mac with Xcode 26 or newer. The iOS Simulator needs no paid Apple developer account, and Capacitor uses Swift Package Manager, so CocoaPods is not required.
+- [Node.js](https://nodejs.org) 24 (recommended). The app builds and type-checks on Node 22.12 or newer, but the test runner (`pnpm test`) does not start on Node 22.
+- pnpm 11.21.0, the version declared in `package.json`. `corepack enable` provides it.
+- Optional, for Android: current Android Studio, the Android SDK/platform tools, its bundled Java 21 runtime, and a physical Android device. iPhone is the release target.
 
-```sh
-corepack enable
-pnpm install
-```
+## Run the iOS app
 
-## Common commands
+These steps run Oculo in the iOS Simulator with no accounts and no API keys.
 
-```sh
-pnpm dev          # start the mobile web development server
-pnpm build        # build all workspace packages
-pnpm lint         # lint the repository
-pnpm typecheck    # type-check all workspace packages
-pnpm test         # run tests once (requires Node 24)
-pnpm format       # format the repository
-pnpm cap:sync     # build and sync web assets/plugins into iOS and Android
-```
+1. Clone the repository and install dependencies:
 
-Run all quality checks before handing off a change:
+   ```sh
+   git clone https://github.com/skylarhknight/Oculo.git
+   cd Oculo
+   corepack enable
+   pnpm install
+   ```
 
-```sh
-pnpm lint && pnpm typecheck && pnpm test && pnpm build
-```
+   If `corepack enable` reports a permissions error, skip it and put `corepack` in front of each `pnpm` command instead, for example `corepack pnpm install`.
+
+2. Build the app and sync it into the iOS project, then open Xcode:
+
+   ```sh
+   pnpm cap:sync
+   pnpm --filter @oculo/mobile exec cap open ios
+   ```
+
+3. In Xcode, select the **App** scheme and any iPhone simulator, then press **Run**.
+
+4. In the app, tap **New project** and choose a scene. Six scenes (Small Garden, LA Night, The Pantheon Interior, The Moon, Perseverance Rover and the International Space Station) are bundled and marked **On device**. Tap one to preview it, then **Select**. Scenes marked **Unavailable** need a hosted scene gallery that is not configured here; you can also import your own `.spz` file.
+
+5. Compose a shot with the lens controls and save it. Add more shots, including a moving shot built from keyframes. Open the storyboard, then export a shot plan.
+
+A **Tutorial** project is included and does not count toward the free limit. Free includes one saved project, and Oculo Pro adds more. Purchases stay disabled until you add a RevenueCat key; see [Try the purchase flow with the RevenueCat Test Store](#try-the-purchase-flow-with-the-revenuecat-test-store).
 
 ## Environment
 
@@ -101,6 +71,8 @@ Create the mobile app's local environment file from its checked-in example. Neve
 ```sh
 cp apps/mobile/.env.example apps/mobile/.env.local
 ```
+
+Native RevenueCat keys are compiled into the web bundle, so after changing an environment variable, rebuild and sync again.
 
 Optional Firebase variables enable accounts (Google, Apple, email) and cloud project sync; leave them empty to run fully local. See [`docs/FIREBASE.md`](docs/FIREBASE.md) for setup:
 
@@ -113,7 +85,7 @@ VITE_FIREBASE_APP_ID=...
 
 ## Try the purchase flow with the RevenueCat Test Store
 
-Oculo Pro is a single non-consumable purchase that lifts the one-saved-project limit. You can exercise the real RevenueCat purchase flow with no card and no Apple or Google account by using a RevenueCat Test Store.
+Oculo Pro is a single non-consumable purchase that lifts the one-saved-project limit. You can exercise the real RevenueCat purchase flow in the iOS app with no card and no Apple account by using a RevenueCat Test Store.
 
 1. In [RevenueCat](https://app.revenuecat.com), create a project and open **Apps and providers** to create a **Test Store**. Copy its public SDK key (it starts with `test_`).
 2. Under **Product catalog**, create a Test Store product with identifier `oculo_pro_lifetime` (non-consumable), attach it to an entitlement named `oculo_pro`, and add it to an offering named `default` as a package with identifier `Oculo_Pro_Lifetime`.
@@ -136,23 +108,47 @@ Oculo Pro is a single non-consumable purchase that lifts the one-saved-project l
 
 Never put a RevenueCat secret key in `VITE_*` variables, source code or native resources. Production releases use platform-specific public SDK keys and a real store product that grants the `oculo_pro` entitlement.
 
-## Run on native devices
+## Run on a physical iPhone
 
-After installing dependencies and configuring environment variables:
+Use a physical iPhone for **Magic Window**, which moves the virtual camera as you move the phone and uses the camera for motion tracking only.
+
+1. Connect the iPhone, unlock it, and turn on **Developer Mode** (Settings, Privacy & Security).
+2. In Xcode, select the **App** target, open **Signing & Capabilities**, and choose a development team. A free Apple ID's Personal Team works if you have no paid account.
+3. The checked-in bundle identifier (`org.example.oculo.student`) is an example. If Xcode reports it as unavailable for your team, change it there, and choose your own before distributing.
+4. Select the iPhone as the run destination and press **Run**. If prompted, trust the developer certificate on the phone (Settings, General, VPN & Device Management).
+
+`pnpm cap:sync` builds a production bundle, which rejects RevenueCat Test Store keys. For the Test Store purchase demo, use the development build in the previous section.
+
+## Run on Android (optional)
 
 ```sh
 pnpm cap:sync
-pnpm --filter @oculo/mobile exec cap open ios
 pnpm --filter @oculo/mobile exec cap open android
 ```
 
-`pnpm cap:sync` builds a production bundle, which rejects RevenueCat Test Store keys. For the Test Store purchase demo, use the development build in the previous section instead.
-
-In Xcode, select the app target, choose a simulator (or set a development team for a physical iPhone, using a free Apple ID's Personal Team if you have no paid account), and press Run. On a physical iPhone, turn on Developer Mode first and trust the developer certificate if prompted. The checked-in bundle identifier (`org.example.oculo.student`) is an example; if Xcode reports it as unavailable for your team, change it in Signing & Capabilities, and choose your own before distributing.
-
 In Android Studio, let Gradle sync, confirm `applicationId`, enable USB debugging on the phone, select the connected device, and press Run. `adb devices` can verify that the device is authorized.
 
-Native RevenueCat keys are compiled into the web bundle. After changing an environment variable, rebuild and sync again.
+## Common commands
+
+```sh
+pnpm build        # build all workspace packages
+pnpm lint         # lint the repository
+pnpm typecheck    # type-check all workspace packages
+pnpm test         # run tests once (requires Node 24)
+pnpm format       # format the repository
+pnpm cap:sync     # build and sync web assets/plugins into iOS and Android
+pnpm dev          # browser preview server for development (see below)
+```
+
+Run all quality checks before handing off a change:
+
+```sh
+pnpm lint && pnpm typecheck && pnpm test && pnpm build
+```
+
+### Browser preview (development only)
+
+`pnpm dev` serves the same interface at <http://localhost:5173> for quick interface work without Xcode. Use your browser's device toolbar to emulate a phone. It is not the shipped app: it has no native purchases and no Magic Window. To exercise the paywall screen there with a simulated purchase and no charge, set `VITE_REVENUECAT_MOCK=true` in `apps/mobile/.env.local` and restart `pnpm dev`. Demo mode only works under `pnpm dev` and is never used in a build.
 
 ## Product and integration guarantees
 
