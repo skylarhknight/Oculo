@@ -15,21 +15,16 @@
   background: var(--color-scene);
 }
 /*
- * --dock-bottom is the top of the bottom controls: the capture bar (plus Update
- * keyframe when shown), or with the thumb sticks the side buttons riding above them.
- * The playback bar sits on it, and the framed shot stays clear of both.
+ * --dock-bottom is the top of the capture bar, a single row with or without the thumb
+ * sticks, so showing them never shrinks the framed shot. The playback bar and Update
+ * keyframe live in the stage panel, not over the scene.
  */
 .workspace-screen {
   --dock-bottom: calc(var(--viewport-bottom-edge) + var(--capture-h) + var(--space-2));
 }
-.workspace-screen:has(.capture-bar__update) {
-  --dock-bottom: calc(
-    var(--viewport-bottom-edge) + var(--capture-h) + var(--hit-min) + var(--space-2) * 2
-  );
-}
 .workspace-screen[data-sticks="true"] {
   --dock-bottom: calc(
-    var(--viewport-bottom-edge) + var(--stick-size) + var(--space-3) + var(--capture-side) +
+    var(--viewport-bottom-edge) + max(var(--stick-size), var(--hit-min) * 2 + var(--space-1)) +
       var(--space-2)
   );
 }
@@ -39,9 +34,6 @@
   transition:
     bottom var(--dur-slow) var(--spring-smooth),
     transform var(--dur-slow) var(--spring-smooth);
-}
-.workspace-screen:has(.scene-progress-dock) .workspace-viewport .scene-stage {
-  bottom: calc(var(--dock-bottom) + var(--scene-progress-h) + var(--space-2));
 }
 .workspace-viewport .scene-status {
   z-index: var(--z-raised);
@@ -309,8 +301,8 @@
 /*
  * The capture bar, like the Camera app: the last shot's image on the left (the
  * library), the shutter in the middle, and a secondary action on the right. With the
- * thumb sticks shown, the side buttons ride above the sticks and the shutter stays
- * between them.
+ * thumb sticks shown they flank the same row: the library and New shot stack beside
+ * the move stick, the crane buttons beside the look stick.
  */
 .capture-bar {
   position: absolute;
@@ -409,9 +401,16 @@
   opacity: var(--disabled-opacity);
   cursor: default;
 }
-.workspace-screen[data-sticks="true"] .capture-bar__library,
-.workspace-screen[data-sticks="true"] .capture-bar__side {
-  translate: 0 calc(-1 * (var(--stick-size) + var(--space-3)));
+.capture-bar__stack {
+  display: grid;
+  gap: var(--space-1);
+  justify-items: center;
+}
+.capture-bar__stack > .capture-bar__library,
+.capture-bar__stack > .capture-bar__side {
+  justify-self: center;
+  width: var(--hit-min);
+  height: var(--hit-min);
 }
 .capture-bar__shutter-wrap {
   display: grid;
@@ -425,6 +424,7 @@
   letter-spacing: var(--tracking-caps);
   text-transform: uppercase;
   text-shadow: var(--shadow-text);
+  white-space: nowrap;
 }
 /* The shutter: a white disc inside a white ring. In a shot it carries a keyframe diamond. */
 .shutter {
@@ -487,34 +487,36 @@
 }
 
 /*
- * The playback bar rides just above the capture bar; with the thumb sticks it clears
- * the side buttons riding above the sticks.
+ * The shot's playback bar and Update keyframe sit at the top of the stage panel, so
+ * they never cover or shrink the scene. The panel content gives up the same height.
  */
-.scene-progress-dock {
-  position: absolute;
-  z-index: var(--z-raised);
-  left: calc(var(--gutter) + var(--safe-left));
-  right: calc(var(--gutter) + var(--safe-right));
-  bottom: var(--dock-bottom);
-  display: grid;
-  justify-items: center;
-  pointer-events: none;
-  transition:
-    bottom var(--dur-slow) var(--spring-smooth),
-    opacity var(--dur-base) var(--ease-standard),
-    transform var(--dur-slow) var(--spring-smooth);
+.shot-timeline {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: var(--shot-timeline-h);
+  padding: 0 calc(var(--gutter) + var(--safe-right)) var(--space-2)
+    calc(var(--gutter) + var(--safe-left));
 }
-.scene-progress-dock > * {
-  pointer-events: auto;
+.shot-timeline .scene-progress {
+  flex: 1;
+  min-width: 0;
 }
-.workspace-screen[data-map="true"] .scene-progress-dock {
-  opacity: 0;
-  transform: translate3d(0, var(--space-7), 0) scale(0.9);
-  pointer-events: none;
+.shot-timeline__update {
+  flex: none;
+  min-height: var(--scene-progress-h);
+  padding: 0 var(--space-3);
+  animation: pop-in var(--dur-slow) var(--spring-bouncy) both;
+}
+.stage-panel:has(.shot-timeline) .stage-content {
+  height: calc(var(--stage-panel-peek-h) - var(--shot-timeline-h));
+}
+.workspace-screen[data-expanded="true"] .stage-panel:has(.shot-timeline) .stage-content {
+  height: calc(var(--stage-panel-expanded-h) - var(--shot-timeline-h));
 }
 
 /*
- * Playback bar over the scene: a glass capsule with play, a scrubbable rail, and a
+ * Playback bar: a glass capsule with play, a scrubbable rail, and a
  * diamond per keyframe. --playhead (0–1) is set on .scene-progress every frame.
  */
 .scene-progress {
@@ -1237,15 +1239,20 @@
 }
 
 /* ── Thumb sticks ───────────────────────────────────── */
+/*
+ * Narrow phones shrink the sticks so both columns and the shutter fit one row. The
+ * shutter drops its caption there; its accessible name still says what it does.
+ */
+.workspace-screen[data-sticks="true"] {
+  --stick-size: var(--stick-size-row);
+  --stick-travel: calc((var(--stick-size) - var(--stick-knob)) / 2);
+}
 .joysticks {
-  position: absolute;
-  z-index: var(--z-raised);
-  left: calc(var(--gutter) + var(--safe-left));
-  right: calc(var(--gutter) + var(--safe-right));
-  bottom: var(--viewport-bottom-edge);
+  width: 100%;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
+  gap: var(--space-1);
   pointer-events: none;
   animation: sticks-in var(--dur-slow) var(--spring-smooth) both;
 }
@@ -1255,13 +1262,11 @@
     transform: translate3d(0, var(--space-4), 0);
   }
 }
-.joysticks > *,
-.joysticks__right > * {
+.joysticks > * {
   pointer-events: auto;
 }
-.joysticks__right {
-  position: relative;
-  pointer-events: none;
+.joysticks .capture-bar__label {
+  display: none;
 }
 .stick {
   position: relative;
@@ -1304,10 +1309,7 @@
   transition: scale var(--dur-base) var(--spring-snappy);
 }
 .crane {
-  position: absolute;
-  right: 0;
-  bottom: calc(var(--stick-size) + var(--space-2));
-  display: flex;
+  display: grid;
   gap: var(--space-1);
 }
 .crane__button {

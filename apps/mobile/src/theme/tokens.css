@@ -300,6 +300,8 @@
   --stick-size: 96px;
   --stick-knob: 40px;
   --stick-travel: calc((var(--stick-size) - var(--stick-knob)) / 2);
+  /* Sticks sharing the capture row with the shutter, shrunk to fit narrow phones. */
+  --stick-size-row: min(var(--stick-size), 22vw);
   --icon-sm: 16px;
   --icon-md: 20px;
   --icon-lg: 24px;
@@ -340,6 +342,8 @@
   --map-dock-pad: 10px;
   /* Scene playback bar and the small shot actions under it. */
   --scene-progress-h: 36px;
+  /* The playback strip atop the stage panel: the bar plus its bottom gap. */
+  --shot-timeline-h: calc(var(--scene-progress-h) + var(--space-2));
   --scene-progress-max-w: 480px;
   --pill-action-h: 32px;
   /* Buttons are capsules, as on apple.com. */

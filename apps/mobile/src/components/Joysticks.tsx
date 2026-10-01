@@ -180,8 +180,19 @@ export function HoldButton({
   );
 }
 
-/** Dual thumb sticks and crane buttons over the scene. */
-export function Joysticks({ drive, disabled }: { drive: NavigationDriver; disabled: boolean }) {
+/**
+ * Dual thumb sticks in the capture row: the move stick, the capture controls passed as
+ * children, the crane buttons, then the look stick.
+ */
+export function Joysticks({
+  drive,
+  disabled,
+  children,
+}: {
+  drive: NavigationDriver;
+  disabled: boolean;
+  children?: ReactNode;
+}) {
   return (
     <div className="joysticks" aria-label="Camera movement" role="group">
       <Stick
@@ -191,35 +202,34 @@ export function Joysticks({ drive, disabled }: { drive: NavigationDriver; disabl
         disabled={disabled}
         onChange={(x, y) => drive({ moveX: x, moveZ: y })}
       />
-      <div className="joysticks__right">
-        <div className="crane">
-          <HoldButton
-            className="crane__button"
-            label="Raise camera"
-            input={{ vertical: 1 }}
-            drive={drive}
-            disabled={disabled}
-          >
-            <ChevronUp size={18} />
-          </HoldButton>
-          <HoldButton
-            className="crane__button"
-            label="Lower camera"
-            input={{ vertical: -1 }}
-            drive={drive}
-            disabled={disabled}
-          >
-            <ChevronDown size={18} />
-          </HoldButton>
-        </div>
-        <Stick
-          className="stick--look"
-          label="Aim camera"
-          hint="Push sideways to pan and up or down to tilt."
+      {children}
+      <div className="crane">
+        <HoldButton
+          className="crane__button"
+          label="Raise camera"
+          input={{ vertical: 1 }}
+          drive={drive}
           disabled={disabled}
-          onChange={(x, y) => drive({ yawRate: x, pitchRate: y })}
-        />
+        >
+          <ChevronUp size={18} />
+        </HoldButton>
+        <HoldButton
+          className="crane__button"
+          label="Lower camera"
+          input={{ vertical: -1 }}
+          drive={drive}
+          disabled={disabled}
+        >
+          <ChevronDown size={18} />
+        </HoldButton>
       </div>
+      <Stick
+        className="stick--look"
+        label="Aim camera"
+        hint="Push sideways to pan and up or down to tilt."
+        disabled={disabled}
+        onChange={(x, y) => drive({ yawRate: x, pitchRate: y })}
+      />
     </div>
   );
 }

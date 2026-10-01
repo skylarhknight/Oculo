@@ -132,6 +132,9 @@ The bundled starter supplies an asset path present in native web assets and can
 be loaded without a network. The scene gallery (`config/sceneCatalog.ts`, built from
 `sceneCatalog.generated.json` by `pnpm scenes:build`) adds bundled scenes with local
 locators and download scenes with remote locators under `VITE_SCENE_GALLERY_BASE_URL`.
+A catalog entry may carry `mapEyeHeight` (scene units, measured; the Perseverance Rover
+has one) to size the map's cinematographer; it is a display hint, not a metric scale, so
+it stays out of the scene binding and exports.
 Both kinds go through `BundledSceneSource` with a pinned fingerprint. `source: "bundled"` alone does not guarantee offline
 availability: the older configured demos still reference remote URLs. A browser
 still needs the app/assets served; arbitrary offline website caching is not

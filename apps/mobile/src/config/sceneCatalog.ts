@@ -21,6 +21,8 @@ interface GeneratedScene {
   splatCount: number;
   camera: { position: number[]; target: number[]; fov: number; quaternion: number[] };
   source: { count: number; streamedLevel: number | null } | null;
+  /** Map figure eye height in scene units, measured for scenes without a known metric scale. */
+  mapEyeHeight?: number;
 }
 
 export const SCENE_LICENSE = {
@@ -159,3 +161,11 @@ export const BUNDLED_DESCRIPTORS: readonly SceneDescriptor[] = SCENE_GALLERY.fil
 
 export const downloadAvailable = (scene: GalleryScene) =>
   scene.availability === "bundled" || scene.descriptor.asset.locator.kind === "remote";
+
+/**
+ * The map figure's eye height for a gallery scene, in scene units, when the catalog has a
+ * measured one. A display hint only: it is not part of the scene binding or any export.
+ */
+export function galleryEyeHeight(sceneId: string): number | undefined {
+  return (generated as GeneratedScene[]).find((scene) => scene.id === sceneId)?.mapEyeHeight;
+}
