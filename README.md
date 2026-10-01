@@ -185,15 +185,6 @@ pnpm lint && pnpm typecheck && pnpm test && pnpm build
 - Oculo does not silently upload customer scenes or project data.
 - Oculo does not build a custom replacement for World Labs Spark.
 
-## Documentation
-
-- [`CLAUDE.md`](CLAUDE.md) — repository rules for coding agents
-- [`docs/SCENE_CONTRACTS.md`](docs/SCENE_CONTRACTS.md) — implemented Phase 4A contracts and migration limitations
-- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — boundaries, target layout, and local persistence
-- [`docs/MVP.md`](docs/MVP.md) — revised Phase 1–14 checklist, Pro boundary, and deferred scope
-- [`docs/WORLD_LABS_INTEGRATION.md`](docs/WORLD_LABS_INTEGRATION.md) — current and future provider adapters
-- [`docs/FIREBASE.md`](docs/FIREBASE.md) — accounts, cloud project sync, and Firebase setup
-
 ## Third-party notices
 
 Third-party components and assets keep their own licenses and notices; see `apps/mobile/public/licenses/` and each scene's `ATTRIBUTION.txt` under `apps/mobile/public/scenes/`.
