@@ -21,12 +21,10 @@
   <img src="https://img.shields.io/badge/license-MIT-2EA44F">
 </p>
 
-
-
 Oculo is an iPhone app for spatial cinematography, built with Capacitor, React and TypeScript. A filmmaker enters a photorealistic world, scouts it, composes shots with real camera and lens controls, saves them as static shots or moving shots built from keyframes, previews the result, and shares it.
 
 <p align="center">
-  <img src="docs/demo.gif" width="85%">
+  <img src="docs/media/demo.gif" width="270" alt="Oculo app demo">
 </p>
 
 The [Version 1.0 PRD](docs/PRD.md) defines an iPhone shot-planning app: durable SPZ import, saved shots, expanded movement editing, PNG shot sheets and supported MP4 previews. Free includes one saved project; the one-time Oculo Pro unlock adds projects. See [implementation alignment](docs/PRD_ALIGNMENT.md) for completed code and remaining device acceptance, and [architecture](docs/ARCHITECTURE.md).
