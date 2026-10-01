@@ -9,12 +9,6 @@
 </p>
 
 <p align="center">
-  <a href="#">Demo</a> •
-  <a href="#">Devpost</a> •
-  <a href="#run-the-ios-app">Run Locally</a>
-</p>
-
-<p align="center">
   <img src="https://img.shields.io/badge/iOS-26+-000000?logo=apple&logoColor=white">
   <img src="https://img.shields.io/badge/React-TypeScript-3178C6?logo=react&logoColor=white">
   <img src="https://img.shields.io/badge/Capacitor-Mobile-119EFF?logo=capacitor&logoColor=white">
@@ -24,6 +18,15 @@
     <img src="https://img.shields.io/badge/Devpost-Project-003E54?logo=devpost&logoColor=white">
   </a>
 </p>
+
+
+<p align="center">
+  <a href="#">Demo</a> •
+  <a href="#">Devpost</a> •
+  <a href="#run-the-ios-app">Run Locally</a>
+</p>
+
+
 
 Oculo is an iPhone app for spatial cinematography, built with Capacitor, React and TypeScript. A filmmaker enters a photorealistic world, scouts it, composes shots with real camera and lens controls, saves them as static shots or moving shots built from keyframes, previews the result, and shares it.
 
